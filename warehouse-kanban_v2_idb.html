@@ -1,0 +1,2777 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>仓库看板</title>
+<style>
+:root{--bg:#f3f6fb;--card:#fff;--surface:#f8fafd;--text:#1e293b;--text-secondary:#64748b;--text-muted:#94a3b8;--border:#e2e8f0;
+--primary:#2563eb;--primary-light:#dbeafe;--primary-dark:#1d4ed8;--success:#10b981;--success-light:#d1fae5;
+--warning:#f59e0b;--warning-light:#fef3c7;--danger:#ef4444;--danger-light:#fee2e2;--info:#0ea5e9;--info-light:#e0f2fe;
+--radius:12px;--shadow-sm:0 1px 2px rgba(0,0,0,0.04);--shadow:0 4px 12px rgba(0,0,0,0.06);--shadow-lg:0 8px 30px rgba(0,0,0,0.08);
+--font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans SC",sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.5}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-thumb{background:#cbd5e1;border-radius:3px}
+.app{display:flex;min-height:100vh}
+.sidebar{width:220px;background:var(--card);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;height:100vh;z-index:100;transition:transform .3s}
+.sidebar-header{padding:20px 20px 12px;border-bottom:1px solid var(--border)}
+.logo{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:700;color:var(--primary)}
+.logo-icon{width:36px;height:36px;background:var(--primary);color:white;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.nav{padding:12px 10px;flex:1;overflow-y:auto}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 14px;border-radius:10px;cursor:pointer;color:var(--text-secondary);font-size:14px;font-weight:500;transition:all .2s;margin-bottom:4px}
+.nav-item:hover{background:var(--surface);color:var(--text)}
+.nav-item.active{background:var(--primary-light);color:var(--primary-dark)}
+.nav-item .badge{margin-left:auto;font-size:11px;background:var(--danger);color:white;padding:2px 6px;border-radius:10px;min-width:18px;text-align:center}
+.sidebar-footer{padding:14px 20px;border-top:1px solid var(--border);font-size:12px;color:var(--text-muted);text-align:center}
+.main{flex:1;margin-left:220px;padding:24px 28px;max-width:1400px}
+.page-title{font-size:22px;font-weight:700;margin-bottom:4px}
+.page-subtitle{font-size:13px;color:var(--text-secondary);margin-bottom:20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:20px}
+.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.card-title{font-size:15px;font-weight:600}
+.card-actions{display:flex;gap:8px}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:24px}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-sm);padding:18px 20px;display:flex;align-items:center;gap:14px;transition:transform .15s,box-shadow .15s}
+.stat-card:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.stat-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.stat-icon.blue{background:var(--primary-light);color:var(--primary)}
+.stat-icon.green{background:var(--success-light);color:var(--success)}
+.stat-icon.amber{background:var(--warning-light);color:var(--warning)}
+.stat-icon.red{background:var(--danger-light);color:var(--danger)}
+.stat-value{font-size:24px;font-weight:700;line-height:1}
+.stat-label{font-size:12px;color:var(--text-secondary);margin-top:4px}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;transition:all .15s;line-height:1}
+.btn-primary{background:var(--primary);color:white}
+.btn-primary:hover{background:var(--primary-dark)}
+.btn-success{background:var(--success);color:white}
+.btn-success:hover{background:#059669}
+.btn-warning{background:var(--warning);color:white}
+.btn-warning:hover{background:#d97706}
+.btn-danger{background:var(--danger);color:white}
+.btn-danger:hover{background:#dc2626}
+.btn-ghost{background:transparent;color:var(--text-secondary);border:1px solid var(--border)}
+.btn-ghost:hover{background:var(--surface);color:var(--text)}
+.btn-sm{padding:6px 12px;font-size:12px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:10px 12px;font-weight:600;color:var(--text-secondary);font-size:12px;text-transform:uppercase;letter-spacing:.3px;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:12px;border-bottom:1px solid var(--border);vertical-align:middle}
+tr:hover td{background:#f8fafd}
+tr:last-child td{border-bottom:none}
+.tag{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;white-space:nowrap}
+.tag-success{background:var(--success-light);color:#047857}
+.tag-warning{background:var(--warning-light);color:#b45309}
+.tag-danger{background:var(--danger-light);color:#b91c1c}
+.tag-info{background:var(--info-light);color:#0369a1}
+.tag-ghost{background:#f1f5f9;color:var(--text-secondary)}
+.qty-bar{display:flex;align-items:center;gap:10px}
+.qty-bar-track{flex:1;height:6px;background:#e2e8f0;border-radius:3px;overflow:hidden;min-width:60px;max-width:120px}
+.qty-bar-fill{height:100%;border-radius:3px;transition:width .3s}
+.qty-bar-fill.safe{background:var(--success)}
+.qty-bar-fill.warn{background:var(--warning)}
+.qty-bar-fill.danger{background:var(--danger)}
+.modal-overlay{position:fixed;inset:0;background:rgba(15,23,42,0.45);backdrop-filter:blur(2px);z-index:200;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-overlay.show{display:flex}
+.modal{background:var(--card);border-radius:16px;box-shadow:var(--shadow-lg);width:100%;max-width:520px;max-height:90vh;overflow:hidden;display:flex;flex-direction:column;animation:modalIn .25s ease-out}
+@keyframes modalIn{from{opacity:0;transform:translateY(20px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.modal-header{padding:20px 24px 0;display:flex;align-items:center;justify-content:space-between}
+.modal-title{font-size:17px;font-weight:700}
+.modal-close{width:32px;height:32px;border-radius:8px;border:none;background:var(--surface);color:var(--text-secondary);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px}
+.modal-close:hover{background:var(--border);color:var(--text)}
+.modal-body{padding:16px 24px;overflow-y:auto}
+.modal-footer{padding:16px 24px 20px;display:flex;justify-content:flex-end;gap:10px;border-top:1px solid var(--border)}
+.modal-header{flex-shrink:0}
+.modal-footer{flex-shrink:0}
+.modal>form{display:flex;flex-direction:column;flex:1;min-height:0}
+.modal>form .modal-body{flex:1;min-height:0}
+.form-group{margin-bottom:14px}
+.form-label{display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:5px}
+.form-input,.form-select,.form-textarea{width:100%;padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-family:inherit;color:var(--text);background:var(--card);transition:border-color .15s,box-shadow .15s}
+.form-input:focus,.form-select:focus,.form-textarea:focus{outline:none;border-color:var(--primary);box-shadow:0 0 0 3px var(--primary-light)}
+.form-textarea{resize:vertical;min-height:60px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.toolbar{display:flex;gap:10px;margin-bottom:16px;flex-wrap:wrap;align-items:center}
+.search-box{position:relative;flex:1;min-width:200px;max-width:320px}
+.search-box input{width:100%;padding:9px 12px 9px 36px;border:1px solid var(--border);border-radius:8px;font-size:13px}
+.search-box svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text-muted)}
+.empty{text-align:center;padding:40px 20px;color:var(--text-muted)}
+.empty-icon{font-size:40px;margin-bottom:10px;opacity:.5}
+.toast-container{position:fixed;top:20px;right:20px;z-index:300;display:flex;flex-direction:column;gap:8px}
+.toast{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 16px;box-shadow:var(--shadow-lg);display:flex;align-items:center;gap:10px;font-size:13px;animation:toastIn .3s ease-out;min-width:260px;max-width:340px}
+.toast.success{border-left:4px solid var(--success)}
+.toast.warning{border-left:4px solid var(--warning)}
+.toast.error{border-left:4px solid var(--danger)}
+@keyframes toastIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+.section{display:none}
+.section.active{display:block}
+.mobile-toggle{display:none;position:fixed;top:14px;left:14px;z-index:110;width:40px;height:40px;border-radius:10px;background:var(--card);border:1px solid var(--border);align-items:center;justify-content:center;font-size:20px;cursor:pointer;box-shadow:var(--shadow)}
+@media(max-width:768px){
+.sidebar{transform:translateX(-100%)}
+.sidebar.open{transform:translateX(0)}
+.main{margin-left:0;padding:60px 16px 20px}
+.mobile-toggle{display:flex}
+.stats-grid{grid-template-columns:1fr 1fr}
+.form-row{grid-template-columns:1fr}
+.toolbar{flex-direction:column;align-items:stretch}
+.search-box{max-width:none}
+}
+.quick-actions{display:flex;gap:10px;margin-bottom:20px;flex-wrap:wrap}
+.quick-action{flex:1;min-width:140px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:12px;text-align:left;border:none}
+.quick-action:hover{border-color:var(--primary);transform:translateY(-1px);box-shadow:var(--shadow)}
+.quick-action-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.danger-row td{background:#fff7ed!important}
+.pivot-config{background:var(--surface);border-radius:12px;padding:16px;border:1px solid var(--border)}
+.pivot-config-row{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.pivot-field{display:flex;flex-direction:column}
+.pivot-field .form-label{margin-bottom:4px;font-size:11px}
+.pivot-field .form-select{padding:7px 10px;font-size:12px}
+#pivotResultTable th{background:var(--surface);position:sticky;top:0;z-index:1}
+#pivotResultTable th.pivot-total{background:var(--primary-light);color:var(--primary-dark);font-weight:700}
+#pivotResultTable td.pivot-total{background:var(--surface);font-weight:700}
+#pivotResultTable td.pivot-grand{background:var(--primary-light);color:var(--primary-dark);font-weight:700}
+@media(max-width:768px){
+.pivot-config-row{grid-template-columns:1fr 1fr}
+}
+.storage-bar{width:100%;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden}
+.storage-bar-fill{height:100%;border-radius:4px;transition:width .3s}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/dexie@3.2.7/dist/dexie.min.js"></script>
+</head>
+<body>
+<div class="mobile-toggle" onclick="toggleSidebar()">☰</div>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="logo"><div class="logo-icon">📦</div><span>仓库看板</span></div>
+    </div>
+    <nav class="nav">
+      <div class="nav-item active" data-section="dashboard" onclick="switchSection('dashboard')">📊 概览</div>
+      <div class="nav-item" data-section="inventory" onclick="switchSection('inventory')">📋 库存管理</div>
+      <div class="nav-item" data-section="borrow" onclick="switchSection('borrow')">📝 借出登记</div>
+      <div class="nav-item" data-section="return" onclick="switchSection('return')">↩️ 归还登记</div>
+      <div class="nav-item" data-section="scrap" onclick="switchSection('scrap')">🗑️ 报废登记</div>
+      <div class="nav-item" data-section="records" onclick="switchSection('records')">📑 记录查询</div>
+      <div class="nav-item" data-section="alerts" onclick="switchSection('alerts')">🔔 库存预警 <span class="badge" id="alertBadge" style="display:none">0</span></div>
+      <div class="nav-item" data-section="reports" onclick="switchSection('reports')">📊 报表导出</div>
+      <div class="nav-item" onclick="showStorageModal()">💾 存储管理</div>
+    </nav>
+    <div class="sidebar-footer">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+        <span id="syncStatus" style="font-size:12px">💻 本地模式</span>
+        <button class="btn btn-ghost btn-sm" style="font-size:11px;padding:4px 8px" onclick="openTeamSyncModal()">🔄 同步</button>
+      </div>
+      <div style="font-size:11px;display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+        <span>存储占用</span>
+        <span id="lsCapacityStatus" style="font-size:11px">--</span>
+      </div>
+      <div style="font-size:11px">数据自动保存在浏览器</div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <!-- ===== DASHBOARD ===== -->
+    <section class="section active" id="dashboard">
+      <div class="page-title">概览</div>
+      <div class="page-subtitle">仓库实时状态一览</div>
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-icon blue">📦</div><div><div class="stat-value" id="statTotal">0</div><div class="stat-label">物品种类</div></div></div>
+        <div class="stat-card"><div class="stat-icon green">✅</div><div><div class="stat-value" id="statInStock">0</div><div class="stat-label">库存总量</div></div></div>
+        <div class="stat-card"><div class="stat-icon amber">📤</div><div><div class="stat-value" id="statBorrowed">0</div><div class="stat-label">借出中</div></div></div>
+        <div class="stat-card"><div class="stat-icon red">⚠️</div><div><div class="stat-value" id="statAlerts">0</div><div class="stat-label">预警物品</div></div></div>
+        <div class="stat-card"><div class="stat-icon" style="background:var(--danger-light);color:var(--danger)">🗑️</div><div><div class="stat-value" id="statScraped">0</div><div class="stat-label">累计报废</div></div></div>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">⚡ 快捷操作</div></div>
+        <div class="quick-actions">
+          <button class="quick-action" onclick="openItemModal()"><div class="quick-action-icon" style="background:var(--primary-light);color:var(--primary)">➕</div><div><div style="font-weight:600;font-size:13px">新增物品</div><div style="font-size:11px;color:var(--text-muted)">录入新的库存物品</div></div></button>
+          <button class="quick-action" onclick="switchSection('borrow')"><div class="quick-action-icon" style="background:var(--warning-light);color:var(--warning)">📝</div><div><div style="font-weight:600;font-size:13px">借出登记</div><div style="font-size:11px;color:var(--text-muted)">记录物品借出</div></div></button>
+          <button class="quick-action" onclick="switchSection('return')"><div class="quick-action-icon" style="background:var(--success-light);color:var(--success)">↩️</div><div><div style="font-weight:600;font-size:13px">归还登记</div><div style="font-size:11px;color:var(--text-muted)">记录物品归还</div></div></button>
+          <button class="quick-action" onclick="switchSection('alerts')"><div class="quick-action-icon" style="background:var(--danger-light);color:var(--danger)">🔔</div><div><div style="font-weight:600;font-size:13px">查看预警</div><div style="font-size:11px;color:var(--text-muted)">低于安全库存</div></div></button>
+        </div>
+      </div>
+      <div style="margin-top:20px" class="card">
+        <div class="card-header"><div class="card-title">📉 库存紧张物品</div><button class="btn btn-ghost btn-sm" onclick="switchSection('alerts')">查看全部</button></div>
+        <div id="dashboardAlerts" class="table-wrap"><div class="empty">暂无预警物品</div></div>
+      </div>
+    </section>
+
+    <!-- ===== INVENTORY ===== -->
+    <section class="section" id="inventory">
+      <div class="page-title">库存管理</div>
+      <div class="page-subtitle">管理所有库存物品</div>
+      <div class="toolbar">
+        <div class="search-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="invSearch" placeholder="搜索项目名称 / 型号 / 位置" oninput="_debounceRenderInventory()">
+        </div>
+        <select class="form-select" style="width:auto;min-width:120px" id="invCategory" onchange="renderInventory()"><option value="">全部分类</option></select>
+        <button class="btn btn-primary" onclick="openItemModal()">➕ 新增物品</button>
+        <button class="btn btn-ghost" onclick="openPivotModal()">📊 数据透视</button>
+        <button class="btn btn-ghost" onclick="exportData()">📥 导出数据</button>
+        <button class="btn btn-ghost" onclick="openImportModal()">📤 导入数据</button>
+        <button class="btn btn-ghost btn-danger" style="color:var(--danger);border-color:var(--danger-light)" onclick="clearAllData()">🗑️ 清空数据</button>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table><thead><tr><th>项目名称</th><th>型号</th><th>分类</th><th>位置</th><th>库存 / 总量</th><th>安全库存</th><th>状态</th><th style="text-align:right">操作</th></tr></thead><tbody id="invTable"></tbody></table>
+        </div>
+        <div id="invEmpty" class="empty" style="display:none"><div class="empty-icon">📦</div><div>暂无物品，点击"新增物品"开始录入</div></div>
+      </div>
+    </section>
+
+    <!-- ===== BORROW ===== -->
+    <section class="section" id="borrow">
+      <div class="page-title">借出登记</div>
+      <div class="page-subtitle">记录物品借出信息，自动同步库存</div>
+      <div class="toolbar">
+        <button class="btn btn-primary" onclick="openBorrowImportModal()">📤 批量导入借出</button>
+        <button class="btn btn-ghost" onclick="resetBorrowForm()">🔄 重置表单</button>
+      </div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">📝 填写借出信息</div></div>
+        <form onsubmit="submitBorrow(event)">
+          <div class="form-row">
+            <div class="form-group" style="flex:2">
+              <label class="form-label">物品 *</label>
+              <input type="text" class="form-input" id="borrowItemSearch" placeholder="🔍 搜索项目名称 / 型号..." oninput="filterBorrowItems(this.value)" style="margin-bottom:6px">
+              <select class="form-select" id="borrowItem" required onchange="onBorrowItemChange()"><option value="">请选择物品</option></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">可用库存</label>
+              <input type="text" class="form-input" id="borrowAvail" readonly placeholder="-">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">借出数量 *</label>
+              <input type="number" class="form-input" id="borrowQty" min="1" required placeholder="输入数量">
+            </div>
+            <div class="form-group">
+              <label class="form-label">借用人 *</label>
+              <input type="text" class="form-input" id="borrower" required placeholder="输入姓名">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">借出日期 *</label>
+              <input type="date" class="form-input" id="borrowDate" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">备注</label>
+            <textarea class="form-textarea" id="borrowRemark" placeholder="可选：用途、地点等"></textarea>
+          </div>
+          <div style="text-align:right">
+            <button type="button" class="btn btn-ghost" onclick="resetBorrowForm()">重置</button>
+            <button type="submit" class="btn btn-warning">✅ 确认借出</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===== RETURN ===== -->
+    <section class="section" id="return">
+      <div class="page-title">归还登记</div>
+      <div class="page-subtitle">记录物品归还，自动恢复库存</div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">↩️ 填写归还信息</div></div>
+        <form onsubmit="submitReturn(event)">
+          <div class="form-row">
+            <div class="form-group" style="flex:2">
+              <label class="form-label">选择借出记录 *</label>
+              <input type="text" class="form-input" id="returnRecordSearch" placeholder="🔍 搜索物品 / 借用人..." oninput="filterReturnRecords(this.value)" style="margin-bottom:6px">
+              <select class="form-select" id="returnRecord" required onchange="onReturnRecordChange()"><option value="">请选择一条借出记录</option></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">借出中数量</label>
+              <input type="text" class="form-input" id="returnPending" readonly placeholder="-">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">归还数量 *</label>
+              <input type="number" class="form-input" id="returnQty" min="1" required placeholder="输入数量">
+            </div>
+            <div class="form-group">
+              <label class="form-label">归还日期 *</label>
+              <input type="date" class="form-input" id="returnDate" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">备注</label>
+            <textarea class="form-textarea" id="returnRemark" placeholder="可选"></textarea>
+          </div>
+          <div style="text-align:right">
+            <button type="button" class="btn btn-ghost" onclick="resetReturnForm()">重置</button>
+            <button type="submit" class="btn btn-success">✅ 确认归还</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===== SCRAP ===== -->
+    <section class="section" id="scrap">
+      <div class="page-title">报废登记</div>
+      <div class="page-subtitle">记录物品报废/损坏信息，自动扣减库存</div>
+      <div class="card">
+        <div class="card-header"><div class="card-title">🗑️ 填写报废信息</div></div>
+        <form onsubmit="submitScrap(event)">
+          <div class="form-row">
+            <div class="form-group" style="flex:2">
+              <label class="form-label">物品 *</label>
+              <input type="text" class="form-input" id="scrapItemSearch" placeholder="🔍 搜索项目名称 / 型号..." oninput="filterScrapItems(this.value)" style="margin-bottom:6px">
+              <select class="form-select" id="scrapItem" required onchange="onScrapItemChange()"><option value="">请选择物品</option></select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">当前库存</label>
+              <input type="text" class="form-input" id="scrapAvail" readonly placeholder="-">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">报废数量 *</label>
+              <input type="number" class="form-input" id="scrapQty" min="1" required placeholder="输入数量">
+            </div>
+            <div class="form-group">
+              <label class="form-label">报废日期 *</label>
+              <input type="date" class="form-input" id="scrapDate" required>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">报废原因 *</label>
+              <input type="text" class="form-input" id="scrapReason" required placeholder="如：摔坏、进水、老化">
+            </div>
+            <div class="form-group">
+              <label class="form-label">操作人 *</label>
+              <input type="text" class="form-input" id="scrapOperator" required placeholder="输入姓名">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">备注</label>
+            <textarea class="form-textarea" id="scrapRemark" placeholder="可选：详细说明"></textarea>
+          </div>
+          <div style="text-align:right">
+            <button type="button" class="btn btn-ghost" onclick="resetScrapForm()">重置</button>
+            <button type="submit" class="btn btn-danger">🗑️ 确认报废</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <!-- ===== RECORDS ===== -->
+    <section class="section" id="records">
+      <div class="page-title">记录查询</div>
+      <div class="page-subtitle">查看借出、归还与报废历史</div>
+      <div class="toolbar">
+        <div class="search-box">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input type="text" id="recSearch" placeholder="搜索物品 / 借用人" oninput="_debounceRenderRecords()">
+        </div>
+        <select class="form-select" style="width:auto" id="recType" onchange="renderRecords()">
+          <option value="">全部类型</option><option value="borrow">借出</option><option value="scrap">报废</option>
+        </select>
+        <select class="form-select" style="width:auto" id="recStatus" onchange="renderRecords()">
+          <option value="">全部状态</option><option value="pending">借出中</option><option value="returned">已归还</option><option value="partial">部分归还</option>
+        </select>
+      </div>
+      <div class="card">
+        <div class="table-wrap">
+          <table><thead><tr><th>类型</th><th>型号</th><th>人员</th><th>数量</th><th>日期</th><th>状态/原因</th><th>备注</th><th style="text-align:right">操作</th></tr></thead><tbody id="recTable"></tbody></table>
+        </div>
+        <div id="recEmpty" class="empty" style="display:none"><div class="empty-icon">📑</div><div>暂无借出记录</div></div>
+      </div>
+    </section>
+
+    <!-- ===== ALERTS ===== -->
+    <section class="section" id="alerts">
+      <div class="page-title">库存预警</div>
+      <div class="page-subtitle">低于安全库存的物品清单</div>
+      <div class="card">
+        <div class="table-wrap">
+          <table><thead><tr><th>项目名称</th><th>型号</th><th>位置</th><th>当前库存</th><th>安全库存</th><th>缺口</th><th>状态</th></tr></thead><tbody id="alertTable"></tbody></table>
+        </div>
+        <div id="alertEmpty" class="empty"><div class="empty-icon">🎉</div><div>所有物品库存充足，暂无预警</div></div>
+      </div>
+    </section>
+
+    <!-- ===== REPORTS ===== -->
+    <section class="section" id="reports">
+      <div class="page-title">报表导出</div>
+      <div class="page-subtitle">生成并导出各类库存与借还报表</div>
+      <div class="card" style="margin-bottom:16px">
+        <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-end">
+          <div class="form-group" style="flex:1;min-width:140px">
+            <label class="form-label">开始日期</label>
+            <input type="date" class="form-input" id="reportStartDate">
+          </div>
+          <div class="form-group" style="flex:1;min-width:140px">
+            <label class="form-label">结束日期</label>
+            <input type="date" class="form-input" id="reportEndDate">
+          </div>
+          <div class="form-group" style="flex:1;min-width:140px">
+            <label class="form-label">报表类型</label>
+            <select class="form-select" id="reportType" onchange="renderReport()">
+              <option value="inventory">库存盘点表</option>
+              <option value="borrowDetail">借出明细表</option>
+              <option value="unreturned">未归还清单</option>
+              <option value="scrapDetail">报废记录</option>
+              <option value="personSummary">人员借还汇总</option>
+            </select>
+          </div>
+          <div style="display:flex;gap:6px;margin-bottom:4px">
+            <button type="button" class="btn btn-ghost btn-sm" onclick="setReportRange('all')">全部</button>
+            <button type="button" class="btn btn-ghost btn-sm" onclick="setReportRange('month')">本月</button>
+            <button type="button" class="btn btn-ghost btn-sm" onclick="setReportRange('quarter')">本季</button>
+          </div>
+          <button type="button" class="btn btn-primary" style="margin-bottom:4px" onclick="exportReportCSV()">导出 CSV</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="table-wrap" id="reportTableWrap">
+          <table>
+            <thead id="reportThead"><tr><th>请先选择报表类型</th></tr></thead>
+            <tbody id="reportTbody"></tbody>
+          </table>
+        </div>
+        <div id="reportEmpty" class="empty" style="display:none"><div class="empty-icon">📭</div><div>该时间段内无数据</div></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Modal: Item History -->
+<div class="modal-overlay" id="historyModal">
+  <div class="modal" style="max-width:700px">
+    <div class="modal-header"><div class="modal-title" id="historyModalTitle">物品履历</div><button class="modal-close" onclick="closeItemHistory()">×</button></div>
+    <div class="modal-body" id="historyModalBody">
+      <div style="display:flex;gap:16px;margin-bottom:20px;flex-wrap:wrap">
+        <div><b>项目名称：</b><span id="historyItemName"></span></div>
+        <div><b>型号：</b><span id="historyItemSpec"></span></div>
+        <div><b>分类：</b><span id="historyItemCategory"></span></div>
+        <div><b>位置：</b><span id="historyItemLocation"></span></div>
+      </div>
+      <div id="historyTimeline" style="border-left:2px solid var(--border);padding-left:16px;margin-left:8px"></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-ghost" onclick="closeItemHistory()">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Add/Edit Item -->
+<div class="modal-overlay" id="itemModal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="itemModalTitle">新增物品</div><button class="modal-close" onclick="closeItemModal()">×</button></div>
+    <form onsubmit="saveItem(event)">
+      <div class="modal-body">
+        <input type="hidden" id="itemId">
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">项目名称 *</label><input type="text" class="form-input" id="itemName" required placeholder="如：电阻 10KΩ"></div>
+          <div class="form-group"><label class="form-label">型号</label><input type="text" class="form-input" id="itemSpec" placeholder="如：0402"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">分类 *</label>
+            <select class="form-select" id="itemCategory" required>
+              <option value="">请选择</option>
+              <option value="整机">整机</option>
+              <option value="机头">机头</option>
+              <option value="主板">主板</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">存放位置</label><input type="text" class="form-input" id="itemLocation" placeholder="如：A区-3号纸箱"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">入库数量 *</label><input type="number" class="form-input" id="itemTotal" min="0" required placeholder="总量"></div>
+          <div class="form-group"><label class="form-label">安全库存 *</label><input type="number" class="form-input" id="itemMin" min="0" required placeholder="低于此值预警"></div>
+        </div>
+        <div class="form-row">
+          <div class="form-group"><label class="form-label">单位</label><input type="text" class="form-input" id="itemUnit" placeholder="如：个 / 卷 / 盒"></div>
+        </div>
+        <div class="form-group"><label class="form-label">备注</label><textarea class="form-textarea" id="itemRemark" placeholder="可选"></textarea></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="closeItemModal()">取消</button>
+        <button type="submit" class="btn btn-primary">保存</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Modal: Import Data -->
+<div class="modal-overlay" id="importModal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="importModalTitle">📤 导入数据</div><button class="modal-close" onclick="closeImportModal()">×</button></div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">选择文件（支持 .json / .csv）</label>
+        <input type="file" class="form-input" id="importFile" accept=".json,.csv" onchange="onImportFileSelect()">
+        <div class="form-hint">JSON：之前导出的备份文件 &nbsp;|&nbsp; CSV：Excel 另存为的 UTF-8 CSV 格式</div>
+      </div>
+      <div class="form-group" id="importFormatHint" style="display:none">
+        <div style="background:var(--info-light);color:#0369a1;padding:10px 14px;border-radius:8px;font-size:12px;line-height:1.6">
+          <b>CSV 格式要求：</b>第一行为表头，列名支持：项目名称、型号、分类、位置、入库数量、安全库存、单位、备注
+        </div>
+      </div>
+      <div class="form-group" id="importOptions" style="display:none">
+        <label class="form-label">导入模式</label>
+        <select class="form-select" id="importMode">
+          <option value="append">追加（保留现有数据，新增物品）</option>
+          <option value="overwrite">覆盖（清空现有数据后导入）</option>
+        </select>
+      </div>
+      <div id="importPreviewWrap" style="display:none">
+        <div class="card-header" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
+          <div class="card-title">📋 数据预览（共 <span id="importCount">0</span> 条）</div>
+        </div>
+        <div class="table-wrap" style="max-height:240px;overflow-y:auto;margin-top:8px">
+          <table id="importPreviewTable"></table>
+        </div>
+      </div>
+      <div id="importError" style="display:none;color:var(--danger);font-size:13px;margin-top:10px;padding:10px 14px;background:var(--danger-light);border-radius:8px"></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-ghost" onclick="closeImportModal()">取消</button>
+      <button type="button" class="btn btn-primary" id="importConfirmBtn" onclick="confirmImport()" disabled>确认导入</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Data Pivot -->
+<div class="modal-overlay" id="pivotModal">
+  <div class="modal" style="max-width:900px">
+    <div class="modal-header"><div class="modal-title">📊 数据透视表</div><button class="modal-close" onclick="closePivotModal()">×</button></div>
+    <div class="modal-body">
+      <div class="pivot-config">
+        <div class="pivot-config-row">
+          <div class="pivot-field">
+            <label class="form-label">数据源</label>
+            <select class="form-select" id="pivotSource" onchange="onPivotSourceChange()">
+              <option value="items">库存物品</option>
+              <option value="records">借出记录</option>
+            </select>
+          </div>
+          <div class="pivot-field">
+            <label class="form-label">行维度</label>
+            <select class="form-select" id="pivotRow">
+              <option value="">请选择</option>
+            </select>
+          </div>
+          <div class="pivot-field">
+            <label class="form-label">列维度（可选）</label>
+            <select class="form-select" id="pivotCol">
+              <option value="">无</option>
+            </select>
+          </div>
+          <div class="pivot-field">
+            <label class="form-label">数值字段</label>
+            <select class="form-select" id="pivotValue">
+              <option value="">请选择</option>
+            </select>
+          </div>
+          <div class="pivot-field">
+            <label class="form-label">聚合方式</label>
+            <select class="form-select" id="pivotAgg">
+              <option value="sum">求和</option>
+              <option value="count">计数</option>
+              <option value="avg">平均值</option>
+              <option value="max">最大值</option>
+              <option value="min">最小值</option>
+            </select>
+          </div>
+        </div>
+        <div style="text-align:center;margin-top:12px">
+          <button class="btn btn-primary" onclick="generatePivotTable()">🔍 生成透视表</button>
+          <button class="btn btn-ghost" onclick="exportPivotTable()" id="pivotExportBtn" style="display:none">📥 导出CSV</button>
+        </div>
+      </div>
+      <div id="pivotResultWrap" style="display:none;margin-top:16px">
+        <div class="card-header" style="padding:0 0 10px 0;border-bottom:1px solid var(--border);margin-bottom:10px">
+          <div class="card-title">📋 透视结果</div>
+        </div>
+        <div class="table-wrap" style="max-height:400px;overflow-y:auto">
+          <table id="pivotResultTable"></table>
+        </div>
+        <div id="pivotSummary" style="margin-top:10px;font-size:12px;color:var(--text-muted)"></div>
+      </div>
+      <div id="pivotError" style="display:none;color:var(--danger);font-size:13px;margin-top:10px;padding:10px 14px;background:var(--danger-light);border-radius:8px"></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-ghost" onclick="closePivotModal()">关闭</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Batch Borrow Import -->
+<div class="modal-overlay" id="borrowImportModal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title" id="borrowImportModalTitle">📤 批量导入借出</div><button class="modal-close" onclick="closeBorrowImportModal()">×</button></div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">选择 CSV 文件</label>
+        <input type="file" class="form-input" id="borrowImportFile" accept=".csv" onchange="onBorrowImportFileSelect()">
+        <div class="form-hint">CSV 格式：项目名称、借出数量、借用人、借出日期、备注 &nbsp;|&nbsp; 支持 UTF-8 编码，自动匹配库存物品</div>
+      </div>
+      <div class="form-group" id="borrowImportHint" style="display:none">
+        <div style="background:var(--info-light);color:#0369a1;padding:10px 14px;border-radius:8px;font-size:12px;line-height:1.6">
+          <b>CSV 格式示例：</b><br>
+          项目名称,借出数量,借用人,借出日期,备注<br>
+          电阻10KΩ,50,张三,2026-08-01,EVT测试用<br>
+          电容100uF,30,李四,2026-08-02,DVT项目借
+        </div>
+      </div>
+      <div id="borrowImportPreviewWrap" style="display:none">
+        <div class="card-header" style="margin-top:10px;padding-top:10px;border-top:1px solid var(--border)">
+          <div class="card-title">📋 数据预览（共 <span id="borrowImportCount">0</span> 条，有效 <span id="borrowImportValid">0</span> 条）</div>
+        </div>
+        <div class="table-wrap" style="max-height:240px;overflow-y:auto;margin-top:8px">
+          <table id="borrowImportPreviewTable"></table>
+        </div>
+      </div>
+      <div id="borrowImportError" style="display:none;color:var(--danger);font-size:13px;margin-top:10px;padding:10px 14px;background:var(--danger-light);border-radius:8px"></div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-ghost" onclick="closeBorrowImportModal()">取消</button>
+      <button type="button" class="btn btn-primary" id="borrowImportConfirmBtn" onclick="confirmBorrowImport()" disabled>确认导入</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="teamSyncModal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">🔄 团队数据同步（T盘）</div><button class="modal-close" onclick="closeTeamSyncModal()">×</button></div>
+    <div class="modal-body">
+      <div style="background:var(--info-light);color:#0369a1;padding:10px 14px;border-radius:8px;font-size:12px;line-height:1.6;margin-bottom:16px">
+        <b>使用 T盘 实现团队数据共享</b><br>
+        1. 点击「导出数据包」下载 JSON 文件<br>
+        2. 将文件上传到 T盘（或发到团队群）<br>
+        3. 团队成员下载后点击「导入数据包」<br>
+        4. 系统自动合并冲突，保留最新数据
+      </div>
+      <div style="display:flex;gap:10px;margin-bottom:16px">
+        <button type="button" class="btn btn-primary" style="flex:1" onclick="exportTeamData()">📤 导出数据包</button>
+        <button type="button" class="btn btn-secondary" style="flex:1" onclick="openTeamImportModal()">📥 导入数据包</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-ghost" onclick="closeTeamSyncModal()">关闭</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" id="teamImportModal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">📥 导入团队数据包</div><button class="modal-close" onclick="closeTeamImportModal()">×</button></div>
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">选择 JSON 数据文件</label>
+        <input type="file" class="form-input" id="teamImportFile" accept=".json,application/json">
+        <div class="form-hint">支持从 T盘 下载的 warehouse-data-*.json 文件</div>
+      </div>
+      <div style="background:var(--warning-light);color:#92400e;padding:10px 14px;border-radius:8px;font-size:12px;line-height:1.6">
+        <b>合并规则：</b><br>
+        • 新物品：直接添加<br>
+        • 已有物品：保留修改时间较新的版本<br>
+        • 借出记录：按 ID 去重合并，不丢失历史
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-ghost" onclick="closeTeamImportModal()">取消</button>
+      <button type="button" class="btn btn-primary" onclick="importTeamData()">确认导入</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ================= IndexedDB 存储层 (Dexie) =================
+var db = null;
+var _memItems = [];
+var _memRecords = [];
+var _dbReady = false;
+var _dbInitPromise = null;
+
+function initDB() {
+  if (_dbInitPromise) return _dbInitPromise;
+  _dbInitPromise = new Promise(function(resolve, reject) {
+    try {
+      db = new Dexie('WarehouseDB');
+      db.version(1).stores({
+        items: 'id',
+        records: 'id'
+      });
+      db.open().then(function() {
+        var migrated = false;
+        try {
+          var oldItems = JSON.parse(localStorage.getItem('warehouse_items') || '[]');
+          var oldRecords = JSON.parse(localStorage.getItem('warehouse_records') || '[]');
+          if (oldItems.length || oldRecords.length) {
+            db.items.bulkPut(oldItems).then(function() {
+              db.records.bulkPut(oldRecords).then(function() {
+                localStorage.removeItem('warehouse_items');
+                localStorage.removeItem('warehouse_records');
+                migrated = true;
+              }).catch(function(){});
+            }).catch(function(){});
+          }
+        } catch(e) {}
+        db.items.toArray().then(function(arr) {
+          _memItems = arr || [];
+          db.records.toArray().then(function(arr2) {
+            _memRecords = arr2 || [];
+            _dbReady = true;
+            if (migrated) showToast('数据已从 localStorage 迁移到 IndexedDB', 'success');
+            resolve();
+          }).catch(function(err){ _memRecords = []; _dbReady = true; resolve(); });
+        }).catch(function(err){ _memItems = []; _dbReady = true; resolve(); });
+      }).catch(function(err) {
+        _memItems = JSON.parse(localStorage.getItem('warehouse_items') || '[]');
+        _memRecords = JSON.parse(localStorage.getItem('warehouse_records') || '[]');
+        _dbReady = true;
+        showToast('IndexedDB 初始化失败，已回退到 localStorage', 'warning');
+        resolve();
+      });
+    } catch(e) {
+      _memItems = [];
+      _memRecords = [];
+      _dbReady = true;
+      resolve();
+    }
+  });
+  return _dbInitPromise;
+}
+
+function loadItems() { return _memItems; }
+function loadRecords() { return _memRecords; }
+function getItem(id) { return _memItems.find(function(i){ return i.id === id; }); }
+
+function saveItems(items) {
+  _memItems = items || [];
+  if (!_dbReady) return;
+  if (db) {
+    db.items.clear().then(function() {
+      if (_memItems.length) db.items.bulkPut(_memItems).catch(function(e){});
+    }).catch(function(e){});
+  } else {
+    try { localStorage.setItem('warehouse_items', JSON.stringify(_memItems)); } catch(e){}
+  }
+  if (window._dbCapacity) window._dbCapacity.warn(true);
+}
+
+function saveRecords(records) {
+  _memRecords = records || [];
+  if (!_dbReady) return;
+  if (db) {
+    db.records.clear().then(function() {
+      if (_memRecords.length) db.records.bulkPut(_memRecords).catch(function(e){});
+    }).catch(function(e){});
+  } else {
+    try { localStorage.setItem('warehouse_records', JSON.stringify(_memRecords)); } catch(e){}
+  }
+  if (window._dbCapacity) window._dbCapacity.warn(true);
+}
+
+// ================= IndexedDB 容量检测 =================
+(function() {
+  window._dbCapacity = {
+    getTotalSize: function() {
+      var itemsSize = 0, recordsSize = 0;
+      try {
+        var itemsJson = JSON.stringify(_memItems || []);
+        var recordsJson = JSON.stringify(_memRecords || []);
+        itemsSize = itemsJson.length * 2;
+        recordsSize = recordsJson.length * 2;
+      } catch(e) {}
+      return itemsSize + recordsSize;
+    },
+    getSizeMB: function() { return (this.getTotalSize() / 1024 / 1024).toFixed(2); },
+    check: function() {
+      var used = this.getTotalSize();
+      var limit = 50 * 1024 * 1024;
+      var pct = Math.min(100, Math.round((used / limit) * 100));
+      return { used: used, limit: limit, pct: pct, available: limit - used, usedMB: (used/1024/1024).toFixed(2) };
+    },
+    warn: function(silent) {
+      var c = this.check();
+      if (c.pct >= 95) {
+        if (!silent) showToast('IndexedDB 容量严重不足：已用 ' + c.pct + '%（约 ' + c.usedMB + 'MB），请立即导出备份并清理数据！', 'error');
+        return 'danger';
+      } else if (c.pct >= 80) {
+        if (!silent) showToast('IndexedDB 容量警告：已用 ' + c.pct + '%（约 ' + c.usedMB + 'MB），建议导出备份', 'warning');
+        return 'warning';
+      } else if (c.pct >= 60) {
+        if (!silent) showToast('IndexedDB 已用 ' + c.pct + '%（约 ' + c.usedMB + 'MB）', 'success');
+        return 'normal';
+      }
+      return 'ok';
+    },
+    renderStatus: function() {
+      var el = document.getElementById('lsCapacityStatus');
+      if (!el) return;
+      var c = this.check();
+      var color = c.pct >= 80 ? 'var(--danger)' : c.pct >= 60 ? 'var(--warning)' : 'var(--success)';
+      el.innerHTML = '<span style="color:' + color + ';font-weight:600">' + c.usedMB + 'MB / ~50MB (' + c.pct + '%)</span>';
+    }
+  };
+})();
+
+
+function getItem(id) { return loadItems().find(function(i){ return i.id === id; }); }
+function nowDate() { return new Date().toISOString().split('T')[0]; }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+function debounce(fn, wait) {
+  var t;
+  return function() {
+    var ctx = this, args = arguments;
+    clearTimeout(t);
+    t = setTimeout(function() { fn.apply(ctx, args); }, wait);
+  };
+}
+var _debounceRenderInventory = debounce(renderInventory, 250);
+var _debounceRenderRecords = debounce(renderRecords, 250);
+
+function showToast(msg, type) {
+  type = type || 'success';
+  var c = document.getElementById('toastContainer');
+  var t = document.createElement('div');
+  t.className = 'toast ' + type;
+  var icon = type === 'success' ? '\u2705' : type === 'warning' ? '\u26A0\uFE0F' : '\u274C';
+  t.innerHTML = '<span>' + icon + '</span><span>' + esc(msg) + '</span>';
+  c.appendChild(t);
+  setTimeout(function() { t.style.opacity = '0'; t.style.transform = 'translateX(20px)'; setTimeout(function() { t.remove(); }, 300); }, 3000);
+}
+function esc(s) {
+  return String(s || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+
+// ================= TEAM SYNC (T盘 JSON 数据包) =================
+function exportTeamData() {
+  var data = {
+    version: 1,
+    exportTime: new Date().toISOString(),
+    items: loadItems(),
+    records: loadRecords()
+  };
+  var blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'warehouse-data-' + nowDate() + '.json';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('团队数据包已导出，请上传到 T盘分享', 'success');
+  closeTeamSyncModal();
+}
+
+function importTeamData() {
+  var fileInput = document.getElementById('teamImportFile');
+  if (!fileInput.files || !fileInput.files[0]) {
+    showToast('请选择要导入的文件', 'warning');
+    return;
+  }
+  var file = fileInput.files[0];
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var data = JSON.parse(e.target.result);
+      if (!data.items || !Array.isArray(data.items)) {
+        showToast('文件格式错误：缺少 items 字段', 'error');
+        return;
+      }
+      var localItems = loadItems();
+      var localRecords = loadRecords();
+      var result = mergeData(localItems, localRecords, data.items, data.records || []);
+      saveItems(result.items);
+      saveRecords(result.records);
+      renderDashboard();
+      renderInventory();
+      renderRecords();
+      renderAlerts();
+      showToast('导入成功：新增 ' + result.addedItems + ' 个物品，更新 ' + result.updatedItems + ' 个物品，合并 ' + result.addedRecords + ' 条记录', 'success');
+      closeTeamImportModal();
+    } catch(err) {
+      showToast('导入失败：' + err.message, 'error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+function mergeData(localItems, localRecords, remoteItems, remoteRecords) {
+  var itemMap = {};
+  var addedItems = 0, updatedItems = 0;
+  for (var i = 0; i < localItems.length; i++) {
+    itemMap[localItems[i].id] = localItems[i];
+  }
+  for (var i = 0; i < remoteItems.length; i++) {
+    var ri = remoteItems[i];
+    if (!itemMap[ri.id]) {
+      itemMap[ri.id] = ri;
+      addedItems++;
+    } else {
+      var li = itemMap[ri.id];
+      var rTime = new Date(ri.updatedAt || ri.createdAt || 0).getTime();
+      var lTime = new Date(li.updatedAt || li.createdAt || 0).getTime();
+      if (rTime > lTime) {
+        itemMap[ri.id] = ri;
+        updatedItems++;
+      }
+    }
+  }
+  var mergedItems = [];
+  for (var k in itemMap) mergedItems.push(itemMap[k]);
+
+  var recordMap = {};
+  var addedRecords = 0;
+  for (var i = 0; i < localRecords.length; i++) {
+    recordMap[localRecords[i].id] = localRecords[i];
+  }
+  for (var i = 0; i < remoteRecords.length; i++) {
+    var rr = remoteRecords[i];
+    if (!recordMap[rr.id]) {
+      recordMap[rr.id] = rr;
+      addedRecords++;
+    }
+  }
+  var mergedRecords = [];
+  for (var k in recordMap) mergedRecords.push(recordMap[k]);
+
+  return {items: mergedItems, records: mergedRecords, addedItems: addedItems, updatedItems: updatedItems, addedRecords: addedRecords};
+}
+
+function openTeamSyncModal() {
+  document.getElementById('teamSyncModal').classList.add('show');
+}
+function closeTeamSyncModal() {
+  document.getElementById('teamSyncModal').classList.remove('show');
+}
+function openTeamImportModal() {
+  document.getElementById('teamImportFile').value = '';
+  document.getElementById('teamImportModal').classList.add('show');
+  closeTeamSyncModal();
+}
+function closeTeamImportModal() {
+  document.getElementById('teamImportModal').classList.remove('show');
+}
+
+// ================= REPORTS =================
+function initReportPage() {
+  setReportRange('all');
+  renderReport();
+}
+function setReportRange(type) {
+  var today = new Date();
+  var s = document.getElementById('reportStartDate');
+  var e = document.getElementById('reportEndDate');
+  if (type === 'all') { s.value = ''; e.value = ''; }
+  else if (type === 'month') {
+    var fd = new Date(today.getFullYear(), today.getMonth(), 1);
+    s.value = fd.toISOString().split('T')[0];
+    e.value = today.toISOString().split('T')[0];
+  } else if (type === 'quarter') {
+    var q = Math.floor(today.getMonth() / 3);
+    var fd = new Date(today.getFullYear(), q * 3, 1);
+    s.value = fd.toISOString().split('T')[0];
+    e.value = today.toISOString().split('T')[0];
+  }
+  renderReport();
+}
+function getReportDateFilter() {
+  var s = document.getElementById('reportStartDate').value;
+  var e = document.getElementById('reportEndDate').value;
+  return { start: s ? new Date(s + 'T00:00:00').getTime() : 0, end: e ? new Date(e + 'T23:59:59').getTime() : Infinity };
+}
+function isInDateRange(dateStr, filter) {
+  if (!dateStr) return true;
+  var t = new Date(dateStr).getTime();
+  return t >= filter.start && t <= filter.end;
+}
+function renderReport() {
+  var type = document.getElementById('reportType').value;
+  var filter = getReportDateFilter();
+  var thead = document.getElementById('reportThead');
+  var tbody = document.getElementById('reportTbody');
+  var empty = document.getElementById('reportEmpty');
+  var wrap = document.getElementById('reportTableWrap');
+  tbody.innerHTML = '';
+  if (type === 'inventory') renderInventoryReport(thead, tbody, empty, wrap);
+  else if (type === 'borrowDetail') renderBorrowDetailReport(thead, tbody, empty, wrap, filter);
+  else if (type === 'unreturned') renderUnreturnedReport(thead, tbody, empty, wrap);
+  else if (type === 'scrapDetail') renderScrapDetailReport(thead, tbody, empty, wrap, filter);
+  else if (type === 'personSummary') renderPersonSummaryReport(thead, tbody, empty, wrap);
+}
+function renderInventoryReport(thead, tbody, empty, wrap) {
+  thead.innerHTML = '<tr><th>项目名称</th><th>型号</th><th>分类</th><th>位置</th><th>库存量</th><th>已借出</th><th>累计报废</th><th>安全库存</th><th>缺口</th><th>状态</th></tr>';
+  var items = loadItems();
+  if (!items.length) { empty.style.display = 'block'; wrap.style.display = 'none'; return; }
+  empty.style.display = 'none'; wrap.style.display = 'block';
+  items.sort(function(a,b){ return (a.name||'').localeCompare(b.name||''); });
+  var html = '';
+  for (var i = 0; i < items.length; i++) {
+    var it = items[i];
+    var gap = (it.minQty||0) - (it.currentQty||0);
+    var status = gap > 0 ? '<span class="tag tag-danger">缺货</span>' : '<span class="tag tag-success">正常</span>';
+    html += '<tr><td>' + esc(it.name) + '</td><td>' + esc(it.spec||'-') + '</td><td>' + esc(it.category||'-') + '</td><td>' + esc(it.location||'-') + '</td>';
+    html += '<td>' + (it.currentQty||0) + ' ' + esc(it.unit||'个') + '</td><td>' + (it.borrowedQty||0) + ' ' + esc(it.unit||'个') + '</td><td>' + (it.scrapedQty||0) + ' ' + esc(it.unit||'个') + '</td>';
+    html += '<td>' + (it.minQty||0) + '</td><td>' + (gap > 0 ? gap : 0) + '</td><td>' + status + '</td></tr>';
+  }
+  tbody.innerHTML = html;
+}
+function renderBorrowDetailReport(thead, tbody, empty, wrap, filter) {
+  thead.innerHTML = '<tr><th>项目名称</th><th>型号</th><th>借用人</th><th>数量</th><th>借出日期</th><th>归还状态</th><th>归还日期</th><th>借出天数</th></tr>';
+  var records = loadRecords();
+  var filtered = records.filter(function(r){ return isInDateRange(r.borrowDate, filter); });
+  if (!filtered.length) { empty.style.display = 'block'; wrap.style.display = 'none'; return; }
+  empty.style.display = 'none'; wrap.style.display = 'block';
+  filtered.sort(function(a,b){ return (b.borrowDate||'').localeCompare(a.borrowDate||''); });
+  var html = '';
+  for (var i = 0; i < filtered.length; i++) {
+    var r = filtered[i];
+    var status = r.returned ? '<span class="tag tag-success">已归还</span>' : '<span class="tag tag-warning">未归还</span>';
+    var days = r.returned ? dayDiff(r.borrowDate, r.returnDate) : dayDiff(r.borrowDate, nowDate());
+    html += '<tr><td>' + esc(r.itemName) + '</td><td>' + esc(r.itemSpec||'-') + '</td><td>' + esc(r.borrower) + '</td>';
+    html += '<td>' + (r.qty||1) + ' ' + esc(r.unit||'个') + '</td><td>' + esc(r.borrowDate) + '</td>';
+    html += '<td>' + status + '</td><td>' + esc(r.returnDate||'-') + '</td><td>' + days + ' 天</td></tr>';
+  }
+  tbody.innerHTML = html;
+}
+function renderUnreturnedReport(thead, tbody, empty, wrap) {
+  thead.innerHTML = '<tr><th>项目名称</th><th>型号</th><th>借用人</th><th>数量</th><th>借出日期</th><th>已借出天数</th><th>备注</th></tr>';
+  var records = loadRecords().filter(function(r){ return !r.returned; });
+  if (!records.length) { empty.style.display = 'block'; wrap.style.display = 'none'; return; }
+  empty.style.display = 'none'; wrap.style.display = 'block';
+  records.sort(function(a,b){ return (a.borrowDate||'').localeCompare(b.borrowDate||''); });
+  var html = '';
+  for (var i = 0; i < records.length; i++) {
+    var r = records[i];
+    var days = dayDiff(r.borrowDate, nowDate());
+    var dayStyle = days > 30 ? 'color:var(--danger);font-weight:700' : days > 14 ? 'color:var(--warning);font-weight:700' : '';
+    html += '<tr><td>' + esc(r.itemName) + '</td><td>' + esc(r.itemSpec||'-') + '</td><td>' + esc(r.borrower) + '</td>';
+    html += '<td>' + (r.qty||1) + ' ' + esc(r.unit||'个') + '</td><td>' + esc(r.borrowDate) + '</td>';
+    html += '<td style="' + dayStyle + '">' + days + ' 天</td><td>' + esc(r.remark||'-') + '</td></tr>';
+  }
+  tbody.innerHTML = html;
+}
+function renderScrapDetailReport(thead, tbody, empty, wrap, filter) {
+  thead.innerHTML = '<tr><th>项目名称</th><th>型号</th><th>报废数量</th><th>报废日期</th><th>报废原因</th><th>操作人</th><th>备注</th></tr>';
+  var records = loadRecords().filter(function(r){ return (r.type || 'borrow') === 'scrap'; });
+  var filtered = records.filter(function(r){ return isInDateRange(r.scrapDate, filter); });
+  if (!filtered.length) { empty.style.display = 'block'; wrap.style.display = 'none'; return; }
+  empty.style.display = 'none'; wrap.style.display = 'block';
+  filtered.sort(function(a,b){ return (b.scrapDate||'').localeCompare(a.scrapDate||''); });
+  var html = '';
+  for (var i = 0; i < filtered.length; i++) {
+    var r = filtered[i];
+    html += '<tr><td>' + esc(r.itemName) + '</td><td>' + esc(r.itemSpec||'-') + '</td>';
+    html += '<td>' + (r.scrapQty||0) + '</td><td>' + esc(r.scrapDate||'-') + '</td>';
+    html += '<td>' + esc(r.scrapReason||'-') + '</td><td>' + esc(r.operator||'-') + '</td>';
+    html += '<td>' + esc(r.remark||'-') + '</td></tr>';
+  }
+  tbody.innerHTML = html;
+}
+function renderPersonSummaryReport(thead, tbody, empty, wrap) {
+  thead.innerHTML = '<tr><th>借用人</th><th>总借出次数</th><th>总借出数量</th><th>已归还数量</th><th>未归还数量</th><th>未归还次数</th></tr>';
+  var records = loadRecords();
+  if (!records.length) { empty.style.display = 'block'; wrap.style.display = 'none'; return; }
+  empty.style.display = 'none'; wrap.style.display = 'block';
+  var map = {};
+  for (var i = 0; i < records.length; i++) {
+    var r = records[i];
+    var name = r.borrower;
+    if (!map[name]) map[name] = {totalCount:0, totalQty:0, returnedQty:0, unreturnedQty:0, unreturnedCount:0};
+    map[name].totalCount++;
+    map[name].totalQty += (r.qty||1);
+    if (r.returned) map[name].returnedQty += (r.qty||1);
+    else { map[name].unreturnedQty += (r.qty||1); map[name].unreturnedCount++; }
+  }
+  var rows = [];
+  for (var k in map) rows.push({name:k, data:map[k]});
+  rows.sort(function(a,b){ return b.data.totalQty - a.data.totalQty; });
+  var html = '';
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    html += '<tr><td><b>' + esc(r.name) + '</b></td><td>' + r.data.totalCount + '</td><td>' + r.data.totalQty + '</td>';
+    html += '<td>' + r.data.returnedQty + '</td><td style="color:var(--danger);font-weight:700">' + r.data.unreturnedQty + '</td><td>' + r.data.unreturnedCount + '</td></tr>';
+  }
+  tbody.innerHTML = html;
+}
+function exportReportCSV() {
+  var type = document.getElementById('reportType').value;
+  var filter = getReportDateFilter();
+  var rows = [];
+  var filename = '';
+  if (type === 'inventory') {
+    filename = '库存盘点表-' + nowDate() + '.csv';
+    rows.push(['项目名称','型号','分类','位置','库存量','已借出','安全库存','缺口','状态']);
+    var items = loadItems();
+    items.sort(function(a,b){ return (a.name||'').localeCompare(b.name||''); });
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      var gap = (it.minQty||0) - (it.currentQty||0);
+      rows.push([it.name||'', it.spec||'', it.category||'', it.location||'', (it.currentQty||0)+''+(it.unit||'个'), (it.borrowedQty||0)+''+(it.unit||'个'), (it.scrapedQty||0)+''+(it.unit||'个'), (it.minQty||0)+'', (gap>0?gap:0)+'', gap>0?'缺货':'正常']);
+    }
+  } else if (type === 'borrowDetail') {
+    filename = '借出明细表-' + nowDate() + '.csv';
+    rows.push(['项目名称','型号','借用人','数量','借出日期','归还状态','归还日期','借出天数']);
+    var records = loadRecords().filter(function(r){ return isInDateRange(r.borrowDate, filter); });
+    records.sort(function(a,b){ return (b.borrowDate||'').localeCompare(a.borrowDate||''); });
+    for (var i = 0; i < records.length; i++) {
+      var r = records[i];
+      var days = r.returned ? dayDiff(r.borrowDate, r.returnDate) : dayDiff(r.borrowDate, nowDate());
+      rows.push([r.itemName||'', r.itemSpec||'', r.borrower||'', (r.qty||1)+''+(r.unit||'个'), r.borrowDate||'', r.returned?'已归还':'未归还', r.returnDate||'', days+'天']);
+    }
+  } else if (type === 'unreturned') {
+    filename = '未归还清单-' + nowDate() + '.csv';
+    rows.push(['项目名称','型号','借用人','数量','借出日期','已借出天数','备注']);
+    var records = loadRecords().filter(function(r){ return !r.returned; });
+    records.sort(function(a,b){ return (a.borrowDate||'').localeCompare(b.borrowDate||''); });
+    for (var i = 0; i < records.length; i++) {
+      var r = records[i];
+      rows.push([r.itemName||'', r.itemSpec||'', r.borrower||'', (r.qty||1)+''+(r.unit||'个'), r.borrowDate||'', dayDiff(r.borrowDate, nowDate())+'天', r.remark||'']);
+    }
+  } else if (type === 'scrapDetail') {
+    filename = '报废记录-' + nowDate() + '.csv';
+    rows.push(['项目名称','型号','报废数量','报废日期','报废原因','操作人','备注']);
+    var records = loadRecords().filter(function(r){ return (r.type || 'borrow') === 'scrap'; });
+    records = records.filter(function(r){ return isInDateRange(r.scrapDate, filter); });
+    records.sort(function(a,b){ return (b.scrapDate||'').localeCompare(a.scrapDate||''); });
+    for (var i = 0; i < records.length; i++) {
+      var r = records[i];
+      rows.push([r.itemName||'', r.itemSpec||'', (r.scrapQty||0)+'', r.scrapDate||'', r.scrapReason||'', r.operator||'', r.remark||'']);
+    }
+  } else if (type === 'personSummary') {
+    filename = '人员借还汇总-' + nowDate() + '.csv';
+    rows.push(['借用人','总借出次数','总借出数量','已归还数量','未归还数量','未归还次数']);
+    var map = {};
+    var records = loadRecords();
+    for (var i = 0; i < records.length; i++) {
+      var r = records[i];
+      var name = r.borrower;
+      if (!map[name]) map[name] = {totalCount:0, totalQty:0, returnedQty:0, unreturnedQty:0, unreturnedCount:0};
+      map[name].totalCount++;
+      map[name].totalQty += (r.qty||1);
+      if (r.returned) map[name].returnedQty += (r.qty||1);
+      else { map[name].unreturnedQty += (r.qty||1); map[name].unreturnedCount++; }
+    }
+    var arr = [];
+    for (var k in map) arr.push({name:k, data:map[k]});
+    arr.sort(function(a,b){ return b.data.totalQty - a.data.totalQty; });
+    for (var i = 0; i < arr.length; i++) {
+      var r = arr[i];
+      rows.push([r.name, r.data.totalCount+'', r.data.totalQty+'', r.data.returnedQty+'', r.data.unreturnedQty+'', r.data.unreturnedCount+'']);
+    }
+  }
+  if (rows.length <= 1) { showToast('无数据可导出', 'warning'); return; }
+  var csv = rows.map(function(row){
+    return row.map(function(cell){
+      var s = String(cell || '').replace(/"/g, '""');
+      if (/[,\n\r"]/.test(s)) s = '"' + s + '"';
+      return s;
+    }).join(',');
+  }).join('\n');
+  var blob = new Blob(['\uFEFF' + csv], {type: 'text/csv;charset=utf-8'});
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('报表已导出: ' + filename, 'success');
+}
+function dayDiff(d1, d2) {
+  if (!d1 || !d2) return 0;
+  var a = new Date(d1); var b = new Date(d2);
+  var diff = Math.floor((b - a) / (1000 * 60 * 60 * 24));
+  return diff >= 0 ? diff : 0;
+}
+
+// ================= ITEM HISTORY =================
+function showItemHistory(itemId) {
+  var item = getItem(itemId);
+  if (!item) return;
+  document.getElementById('historyModalTitle').textContent = item.name + ' 的履历';
+  document.getElementById('historyItemName').textContent = item.name;
+  document.getElementById('historyItemSpec').textContent = item.spec || '-';
+  document.getElementById('historyItemCategory').textContent = item.category || '-';
+  document.getElementById('historyItemLocation').textContent = item.location || '-';
+  var events = [];
+  events.push({ date: item.createdAt || nowDate(), type: '入库', icon: '📦', color: 'var(--success)', desc: '物品入库，初始数量 ' + (item.totalQty || 0) + ' ' + (item.unit || '个') });
+  var records = loadRecords().filter(function(r){ return r.itemId === itemId; });
+  records.sort(function(a,b){ return (a.borrowDate||'').localeCompare(b.borrowDate||''); });
+  for (var i = 0; i < records.length; i++) {
+    var r = records[i];
+    if ((r.type || 'borrow') === 'scrap') {
+      events.push({ date: r.scrapDate, type: '报废', icon: '🗑️', color: 'var(--danger)', desc: (r.operator || '-') + ' 报废 ' + (r.scrapQty || 0) + ' 个' + (r.scrapReason ? '（原因：' + r.scrapReason + '）' : '') });
+    } else {
+      events.push({ date: r.borrowDate, type: '借出', icon: '📝', color: 'var(--primary)', desc: r.borrower + ' 借出 ' + (r.borrowQty || 1) + ' 个' + (r.remark ? '（' + r.remark + '）' : '') });
+      if (r.status === 'returned' && r.returnDate) {
+        events.push({ date: r.returnDate, type: '归还', icon: '↩️', color: 'var(--success)', desc: r.borrower + ' 归还 ' + (r.returnQty || r.borrowQty || 1) + ' 个' });
+      } else if (r.status === 'partial' && r.returnDate) {
+        events.push({ date: r.returnDate, type: '归还', icon: '↩️', color: 'var(--success)', desc: r.borrower + ' 归还 ' + (r.returnQty || 0) + ' / ' + r.borrowQty + ' 个' });
+      }
+    }
+  }
+  events.sort(function(a,b){ return (a.date||'').localeCompare(b.date||''); });
+  var html = '';
+  for (var i = 0; i < events.length; i++) {
+    var e = events[i];
+    html += '<div style="position:relative;margin-bottom:16px;padding:12px 16px;background:var(--card-bg);border-radius:8px;border:1px solid var(--border)">';
+    html += '<div style="position:absolute;left:-25px;top:16px;width:14px;height:14px;border-radius:50%;background:' + e.color + ';border:2px solid #fff"></div>';
+    html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">';
+    html += '<span style="font-size:18px">' + e.icon + '</span>';
+    html += '<span class="tag" style="background:' + e.color + '15;color:' + e.color + ';font-size:11px;padding:2px 8px;border-radius:4px">' + e.type + '</span>';
+    html += '<span style="font-size:12px;color:var(--text-muted)">' + e.date + '</span>';
+    html += '</div>';
+    html += '<div style="font-size:14px">' + e.desc + '</div>';
+    html += '</div>';
+  }
+  document.getElementById('historyTimeline').innerHTML = html;
+  document.getElementById('historyModal').classList.add('show');
+}
+function closeItemHistory() {
+  document.getElementById('historyModal').classList.remove('show');
+}
+
+// ================= NAVIGATION =================
+function switchSection(name) {
+  var sections = document.querySelectorAll('.section');
+  for (var i = 0; i < sections.length; i++) sections[i].classList.remove('active');
+  var navs = document.querySelectorAll('.nav-item');
+  for (var i = 0; i < navs.length; i++) navs[i].classList.remove('active');
+  var sec = document.getElementById(name);
+  if (sec) sec.classList.add('active');
+  var nav = document.querySelector('.nav-item[data-section="' + name + '"]');
+  if (nav) nav.classList.add('active');
+  if (name === 'inventory') renderInventory();
+  if (name === 'records') renderRecords();
+  if (name === 'alerts') renderAlerts();
+  if (name === 'dashboard') renderDashboard();
+  if (name === 'borrow') initBorrowForm();
+  if (name === 'return') initReturnForm();
+  if (name === 'scrap') initScrapForm();
+  if (name === 'reports') initReportPage();
+  document.getElementById('sidebar').classList.remove('open');
+}
+function toggleSidebar() { document.getElementById('sidebar').classList.toggle('open'); }
+
+// ================= DASHBOARD =================
+function renderDashboard() {
+  var items = loadItems();
+  var records = loadRecords();
+  var total = items.length;
+  var inStock = 0, borrowed = 0, scraped = 0;
+  for (var i = 0; i < items.length; i++) {
+    inStock += (items[i].currentQty || 0);
+    borrowed += (items[i].borrowedQty || 0);
+    scraped += (items[i].scrapedQty || 0);
+  }
+  var alerts = [];
+  for (var i = 0; i < items.length; i++) {
+    if ((items[i].currentQty || 0) < (items[i].minQty || 0)) alerts.push(items[i]);
+  }
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statInStock').textContent = inStock;
+  document.getElementById('statBorrowed').textContent = borrowed;
+  document.getElementById('statAlerts').textContent = alerts.length;
+  document.getElementById('statScraped').textContent = scraped;
+  var badge = document.getElementById('alertBadge');
+  badge.textContent = alerts.length;
+  badge.style.display = alerts.length ? 'inline-flex' : 'none';
+
+  var container = document.getElementById('dashboardAlerts');
+  if (!alerts.length) { container.innerHTML = '<div class="empty">🎉 所有物品库存充足</div>'; return; }
+  var html = '<table><thead><tr><th>物品</th><th>位置</th><th>库存</th><th>安全库存</th><th>缺口</th></tr></thead><tbody>';
+  for (var i = 0; i < Math.min(alerts.length, 5); i++) {
+    var it = alerts[i];
+    var gap = (it.minQty || 0) - (it.currentQty || 0);
+    html += '<tr><td><b>' + esc(it.name) + '</b>' + (it.spec ? ' <span style="color:var(--text-muted);font-size:12px">' + esc(it.spec) + '</span>' : '') + '</td>';
+    html += '<td>' + esc(it.location || '-') + '</td>';
+    html += '<td style="color:var(--danger);font-weight:700">' + (it.currentQty || 0) + ' ' + esc(it.unit || '个') + '</td>';
+    html += '<td>' + (it.minQty || 0) + '</td>';
+    html += '<td><span class="tag tag-danger">缺 ' + gap + '</span></td></tr>';
+  }
+  html += '</tbody></table>';
+  container.innerHTML = html;
+}
+
+// ================= INVENTORY =================
+function getCategories() {
+  var cats = {};
+  var items = loadItems();
+  for (var i = 0; i < items.length; i++) {
+    if (items[i].category) cats[items[i].category] = true;
+  }
+  return Object.keys(cats).sort();
+}
+function renderInventory() {
+  var search = (document.getElementById('invSearch').value || '').toLowerCase();
+  var cat = document.getElementById('invCategory').value;
+  var items = loadItems();
+  var cats = getCategories();
+  var sel = document.getElementById('invCategory');
+  var oldVal = sel.value;
+  var opts = '<option value="">全部分类</option>';
+  for (var i = 0; i < cats.length; i++) {
+    opts += '<option value="' + esc(cats[i]) + '">' + esc(cats[i]) + '</option>';
+  }
+  sel.innerHTML = opts;
+  sel.value = oldVal;
+
+  var filtered = [];
+  for (var i = 0; i < items.length; i++) {
+    var it = items[i];
+    var m = !search || ((it.name || '').toLowerCase().indexOf(search) > -1) || ((it.spec || '').toLowerCase().indexOf(search) > -1) || ((it.location || '').toLowerCase().indexOf(search) > -1);
+    var c = !cat || it.category === cat;
+    if (m && c) filtered.push(it);
+  }
+  var tbody = document.getElementById('invTable');
+  var empty = document.getElementById('invEmpty');
+  if (!filtered.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  var html = '';
+  for (var i = 0; i < filtered.length; i++) {
+    var it = filtered[i];
+    var pct = it.totalQty && it.totalQty > 0 ? Math.round(((it.currentQty || 0) / it.totalQty) * 100) : 0;
+    var isLow = (it.currentQty || 0) < (it.minQty || 0);
+    var barCls = pct > 50 ? 'safe' : pct > 20 ? 'warn' : 'danger';
+    var statusTag = isLow ? '<span class="tag tag-danger">⚠️ 库存紧张</span>' : '<span class="tag tag-success">✅ 正常</span>';
+    html += '<tr' + (isLow ? ' class="danger-row"' : '') + '>';
+    html += '<td><b>' + esc(it.name) + '</b></td>';
+    html += '<td>' + esc(it.spec || '-') + '</td>';
+    html += '<td><span class="tag tag-ghost">' + esc(it.category || '-') + '</span></td>';
+    html += '<td>' + esc(it.location || '-') + '</td>';
+    html += '<td><div class="qty-bar"><div class="qty-bar-track"><div class="qty-bar-fill ' + barCls + '" style="width:' + Math.max(pct, 5) + '%"></div></div><span>' + (it.currentQty || 0) + ' / ' + (it.totalQty || 0) + (it.unit ? ' ' + esc(it.unit) : '') + '</span></div></td>';
+    html += '<td>' + (it.minQty || 0) + '</td>';
+    html += '<td>' + statusTag + '</td>';
+    html += '<td style="text-align:right"><button class="btn btn-ghost btn-sm" onclick="showItemHistory(\'' + it.id + '\')">履历</button> <button class="btn btn-ghost btn-sm" onclick="editItem(\'' + it.id + '\')">编辑</button> <button class="btn btn-ghost btn-sm" style="color:var(--danger)" onclick="deleteItem(\'' + it.id + '\')">删除</button></td>';
+    html += '</tr>';
+  }
+  tbody.innerHTML = html;
+}
+
+function openItemModal(id) {
+  document.getElementById('itemModalTitle').textContent = id ? '编辑物品' : '新增物品';
+  document.getElementById('itemId').value = id || '';
+  if (id) {
+    var it = getItem(id);
+    if (!it) return;
+    document.getElementById('itemName').value = it.name || '';
+    document.getElementById('itemSpec').value = it.spec || '';
+    document.getElementById('itemCategory').value = it.category || '';
+    document.getElementById('itemLocation').value = it.location || '';
+    document.getElementById('itemTotal').value = it.totalQty || 0;
+    document.getElementById('itemMin').value = it.minQty || 0;
+    document.getElementById('itemUnit').value = it.unit || '';
+    document.getElementById('itemRemark').value = it.remark || '';
+  } else {
+    document.getElementById('itemName').value = '';
+    document.getElementById('itemSpec').value = '';
+    document.getElementById('itemCategory').value = '';
+    document.getElementById('itemLocation').value = '';
+    document.getElementById('itemTotal').value = '';
+    document.getElementById('itemMin').value = '';
+    document.getElementById('itemUnit').value = '';
+    document.getElementById('itemRemark').value = '';
+  }
+  document.getElementById('itemModal').classList.add('show');
+}
+function closeItemModal() { document.getElementById('itemModal').classList.remove('show'); }
+function saveItem(e) {
+  e.preventDefault();
+  var id = document.getElementById('itemId').value;
+  var items = loadItems();
+  var totalQty = parseInt(document.getElementById('itemTotal').value) || 0;
+  var data = {
+    id: id || uid(),
+    name: document.getElementById('itemName').value.trim(),
+    spec: document.getElementById('itemSpec').value.trim(),
+    category: document.getElementById('itemCategory').value,
+    location: document.getElementById('itemLocation').value.trim(),
+    totalQty: totalQty,
+    minQty: parseInt(document.getElementById('itemMin').value) || 0,
+    unit: document.getElementById('itemUnit').value.trim(),
+    remark: document.getElementById('itemRemark').value.trim(),
+    borrowedQty: 0
+  };
+  if (!id) {
+    data.createdAt = new Date().toISOString();
+    data.currentQty = totalQty;
+  } else {
+    for (var i = 0; i < items.length; i++) {
+      if (items[i].id === id) {
+        data.currentQty = items[i].currentQty || 0;
+        data.borrowedQty = items[i].borrowedQty || 0;
+        data.createdAt = items[i].createdAt;
+        break;
+      }
+    }
+  }
+  if (id) {
+    var idx = -1;
+    for (var i = 0; i < items.length; i++) { if (items[i].id === id) { idx = i; break; } }
+    if (idx > -1) items[idx] = data;
+  } else {
+    items.push(data);
+  }
+  saveItems(items);
+  closeItemModal();
+  showToast(id ? '物品已更新' : '物品已添加');
+  renderInventory();
+  renderDashboard();
+  initBorrowForm();
+  initReturnForm();
+}
+function editItem(id) { openItemModal(id); }
+function deleteItem(id) {
+  if (!confirm('确定删除该物品吗？关联的借出记录将保留但不再关联此物品。')) return;
+  var items = [];
+  var all = loadItems();
+  for (var i = 0; i < all.length; i++) { if (all[i].id !== id) items.push(all[i]); }
+  saveItems(items);
+  showToast('物品已删除');
+  renderInventory();
+  renderDashboard();
+  initBorrowForm();
+  initReturnForm();
+}
+
+// ================= BORROW =================
+var _borrowItemOptions = '';
+function initBorrowForm() {
+  var sel = document.getElementById('borrowItem');
+  var items = loadItems();
+  var html = '<option value="">请选择物品</option>';
+  for (var i = 0; i < items.length; i++) {
+    var it = items[i];
+    if ((it.currentQty || 0) > 0) {
+      var catTag = it.category ? '[' + esc(it.category) + '] ' : '';
+      html += '<option value="' + it.id + '">' + catTag + esc(it.name) + (it.spec ? ' (' + esc(it.spec) + ')' : '') + ' - 可用 ' + (it.currentQty || 0) + (it.unit ? ' ' + esc(it.unit) : '') + '</option>';
+    }
+  }
+  _borrowItemOptions = html;
+  sel.innerHTML = html;
+  document.getElementById('borrowAvail').value = '';
+  document.getElementById('borrowDate').value = nowDate();
+}
+function filterBorrowItems(query) {
+  var sel = document.getElementById('borrowItem');
+  var q = (query || '').toLowerCase();
+  if (!q) { sel.innerHTML = _borrowItemOptions; return; }
+  var opts = _borrowItemOptions.split('</option>');
+  var filtered = '<option value="">请选择物品</option>';
+  for (var i = 0; i < opts.length; i++) {
+    if (opts[i].indexOf('<option') === -1) continue;
+    var text = opts[i].replace(/<[^>]+>/g, '').toLowerCase();
+    if (text.indexOf(q) > -1) filtered += opts[i] + '</option>';
+  }
+  sel.innerHTML = filtered;
+}
+function onBorrowItemChange() {
+  var id = document.getElementById('borrowItem').value;
+  var it = getItem(id);
+  document.getElementById('borrowAvail').value = it ? (it.currentQty || 0) + (it.unit ? ' ' + it.unit : '') + ' 可用' : '';
+}
+function submitBorrow(e) {
+  e.preventDefault();
+  var itemId = document.getElementById('borrowItem').value;
+  var qty = parseInt(document.getElementById('borrowQty').value) || 0;
+  var borrower = document.getElementById('borrower').value.trim();
+  var borrowDate = document.getElementById('borrowDate').value;
+  var remark = document.getElementById('borrowRemark').value.trim();
+  if (!itemId) { showToast('请选择物品', 'error'); return; }
+  if (qty <= 0) { showToast('借出数量需大于0', 'error'); return; }
+  if (!borrower) { showToast('请填写借用人', 'error'); return; }
+  var items = loadItems();
+  var it = null;
+  for (var i = 0; i < items.length; i++) { if (items[i].id === itemId) { it = items[i]; break; } }
+  if (!it) { showToast('物品不存在', 'error'); return; }
+  if ((it.currentQty || 0) < qty) { showToast('库存不足，当前可用 ' + (it.currentQty || 0), 'error'); return; }
+  it.currentQty = (it.currentQty || 0) - qty;
+  it.borrowedQty = (it.borrowedQty || 0) + qty;
+  saveItems(items);
+  var rec = {
+    id: uid(), itemId: itemId, itemName: it.name, itemSpec: it.spec || '', borrower: borrower, borrowQty: qty,
+    borrowDate: borrowDate, expectedReturnDate: '', status: 'pending', returnDate: '',
+    returnQty: 0, remark: remark, createdAt: new Date().toISOString()
+  };
+  var records = loadRecords();
+  records.unshift(rec);
+  saveRecords(records);
+  showToast('借出登记成功：' + esc(it.name) + ' x' + qty);
+  resetBorrowForm();
+  renderDashboard();
+  initReturnForm();
+}
+function resetBorrowForm() {
+  document.getElementById('borrowItem').value = '';
+  document.getElementById('borrowItemSearch').value = '';
+  document.getElementById('borrowQty').value = '';
+  document.getElementById('borrower').value = '';
+  document.getElementById('borrowDate').value = nowDate();
+  document.getElementById('borrowRemark').value = '';
+  document.getElementById('borrowAvail').value = '';
+  filterBorrowItems('');
+}
+
+// ================= SCRAP =================
+var _scrapItemOptions = '';
+function initScrapForm() {
+  document.getElementById('scrapDate').value = nowDate();
+  var items = loadItems();
+  var opts = '<option value="">请选择物品</option>';
+  for (var i = 0; i < items.length; i++) {
+    var it = items[i];
+    opts += '<option value="' + it.id + '">' + esc(it.name) + (it.spec ? ' / ' + esc(it.spec) : '') + ' (库存:' + (it.currentQty || 0) + ')</option>';
+  }
+  _scrapItemOptions = opts;
+  document.getElementById('scrapItem').innerHTML = opts;
+}
+function filterScrapItems(val) {
+  val = (val || '').toLowerCase();
+  var items = loadItems();
+  var opts = '<option value="">请选择物品</option>';
+  for (var i = 0; i < items.length; i++) {
+    var it = items[i];
+    var m = !val || ((it.name || '').toLowerCase().indexOf(val) > -1) || ((it.spec || '').toLowerCase().indexOf(val) > -1);
+    if (m) opts += '<option value="' + it.id + '">' + esc(it.name) + (it.spec ? ' / ' + esc(it.spec) : '') + ' (库存:' + (it.currentQty || 0) + ')</option>';
+  }
+  document.getElementById('scrapItem').innerHTML = opts;
+}
+function onScrapItemChange() {
+  var itemId = document.getElementById('scrapItem').value;
+  var it = getItem(itemId);
+  document.getElementById('scrapAvail').value = it ? (it.currentQty || 0) + (it.unit ? ' ' + it.unit : '') + ' 可用' : '';
+}
+function submitScrap(e) {
+  e.preventDefault();
+  var itemId = document.getElementById('scrapItem').value;
+  var qty = parseInt(document.getElementById('scrapQty').value) || 0;
+  var scrapDate = document.getElementById('scrapDate').value;
+  var scrapReason = document.getElementById('scrapReason').value.trim();
+  var operator = document.getElementById('scrapOperator').value.trim();
+  var remark = document.getElementById('scrapRemark').value.trim();
+  if (!itemId) { showToast('请选择物品', 'error'); return; }
+  if (qty <= 0) { showToast('报废数量需大于0', 'error'); return; }
+  if (!scrapReason) { showToast('请填写报废原因', 'error'); return; }
+  if (!operator) { showToast('请填写操作人', 'error'); return; }
+  var items = loadItems();
+  var it = null;
+  for (var i = 0; i < items.length; i++) { if (items[i].id === itemId) { it = items[i]; break; } }
+  if (!it) { showToast('物品不存在', 'error'); return; }
+  if ((it.currentQty || 0) < qty) { showToast('库存不足，当前可用 ' + (it.currentQty || 0), 'error'); return; }
+  it.currentQty = (it.currentQty || 0) - qty;
+  it.totalQty = (it.totalQty || 0) - qty;
+  it.scrapedQty = (it.scrapedQty || 0) + qty;
+  saveItems(items);
+  var rec = {
+    id: uid(), type: 'scrap', itemId: itemId, itemName: it.name, itemSpec: it.spec || '',
+    scrapQty: qty, scrapDate: scrapDate, scrapReason: scrapReason,
+    operator: operator, remark: remark, createdAt: new Date().toISOString()
+  };
+  var records = loadRecords();
+  records.unshift(rec);
+  saveRecords(records);
+  showToast('报废登记成功：' + esc(it.name) + ' x' + qty, 'success');
+  resetScrapForm();
+  renderDashboard();
+  renderInventory();
+  renderRecords();
+}
+function resetScrapForm() {
+  document.getElementById('scrapItem').value = '';
+  document.getElementById('scrapItemSearch').value = '';
+  document.getElementById('scrapQty').value = '';
+  document.getElementById('scrapDate').value = nowDate();
+  document.getElementById('scrapReason').value = '';
+  document.getElementById('scrapOperator').value = '';
+  document.getElementById('scrapRemark').value = '';
+  document.getElementById('scrapAvail').value = '';
+  filterScrapItems('');
+}
+
+// ================= RETURN =================
+var _returnRecordOptions = '';
+function initReturnForm() {
+  var sel = document.getElementById('returnRecord');
+  var records = loadRecords();
+  var html = '<option value="">请选择一条借出记录</option>';
+  for (var i = 0; i < records.length; i++) {
+    var r = records[i];
+    if (r.status === 'pending' || r.status === 'partial') {
+      var pending = (r.borrowQty || 0) - (r.returnQty || 0);
+      html += '<option value="' + r.id + '">' + esc(r.itemName) + ' → ' + esc(r.borrower) + ' (借' + r.borrowQty + '，还' + (r.returnQty || 0) + '，待还' + pending + ')</option>';
+    }
+  }
+  _returnRecordOptions = html;
+  sel.innerHTML = html;
+  document.getElementById('returnPending').value = '';
+  document.getElementById('returnDate').value = nowDate();
+}
+function filterReturnRecords(query) {
+  var sel = document.getElementById('returnRecord');
+  var q = (query || '').toLowerCase();
+  if (!q) { sel.innerHTML = _returnRecordOptions; return; }
+  var opts = _returnRecordOptions.split('</option>');
+  var filtered = '<option value="">请选择一条借出记录</option>';
+  for (var i = 0; i < opts.length; i++) {
+    if (opts[i].indexOf('<option') === -1) continue;
+    var text = opts[i].replace(/<[^>]+>/g, '').toLowerCase();
+    if (text.indexOf(q) > -1) filtered += opts[i] + '</option>';
+  }
+  sel.innerHTML = filtered;
+}
+function onReturnRecordChange() {
+  var id = document.getElementById('returnRecord').value;
+  var records = loadRecords();
+  var rec = null;
+  for (var i = 0; i < records.length; i++) { if (records[i].id === id) { rec = records[i]; break; } }
+  if (!rec) { document.getElementById('returnPending').value = ''; return; }
+  var pending = (rec.borrowQty || 0) - (rec.returnQty || 0);
+  document.getElementById('returnPending').value = pending + ' 待还';
+  document.getElementById('returnQty').value = pending;
+}
+function submitReturn(e) {
+  e.preventDefault();
+  var recId = document.getElementById('returnRecord').value;
+  var qty = parseInt(document.getElementById('returnQty').value) || 0;
+  var returnDate = document.getElementById('returnDate').value;
+  var remark = document.getElementById('returnRemark').value.trim();
+  if (!recId) { showToast('请选择借出记录', 'error'); return; }
+  if (qty <= 0) { showToast('归还数量需大于0', 'error'); return; }
+  var records = loadRecords();
+  var rec = null, recIdx = -1;
+  for (var i = 0; i < records.length; i++) { if (records[i].id === recId) { rec = records[i]; recIdx = i; break; } }
+  if (!rec) { showToast('记录不存在', 'error'); return; }
+  var pending = (rec.borrowQty || 0) - (rec.returnQty || 0);
+  if (qty > pending) { showToast('归还数量不能超过待还数量 ' + pending, 'error'); return; }
+  rec.returnQty = (rec.returnQty || 0) + qty;
+  rec.returnDate = returnDate;
+  rec.remark = (rec.remark || '') + (rec.remark ? ' | ' : '') + '归还' + qty + (remark ? ' (' + remark + ')' : '');
+  if (rec.returnQty >= rec.borrowQty) rec.status = 'returned';
+  else rec.status = 'partial';
+  saveRecords(records);
+  var items = loadItems();
+  for (var i = 0; i < items.length; i++) {
+    if (items[i].id === rec.itemId) {
+      items[i].currentQty = (items[i].currentQty || 0) + qty;
+      items[i].borrowedQty = Math.max(0, (items[i].borrowedQty || 0) - qty);
+      saveItems(items);
+      break;
+    }
+  }
+  showToast('归还登记成功：' + esc(rec.itemName) + ' x' + qty);
+  resetReturnForm();
+  renderDashboard();
+  initBorrowForm();
+  initReturnForm();
+  renderRecords();
+}
+function resetReturnForm() {
+  document.getElementById('returnRecord').value = '';
+  document.getElementById('returnRecordSearch').value = '';
+  document.getElementById('returnQty').value = '';
+  document.getElementById('returnDate').value = nowDate();
+  document.getElementById('returnRemark').value = '';
+  document.getElementById('returnPending').value = '';
+  filterReturnRecords('');
+}
+
+// ================= RECORDS =================
+function renderRecords() {
+  var search = (document.getElementById('recSearch').value || '').toLowerCase();
+  var status = document.getElementById('recStatus').value;
+  var type = document.getElementById('recType').value;
+  var records = loadRecords();
+  var filtered = [];
+  for (var i = 0; i < records.length; i++) {
+    var r = records[i];
+    var recType = r.type || 'borrow';
+    var m = !search || ((r.itemName || '').toLowerCase().indexOf(search) > -1) || ((r.borrower || '').toLowerCase().indexOf(search) > -1) || ((r.operator || '').toLowerCase().indexOf(search) > -1);
+    var s = !status || r.status === status;
+    var t = !type || recType === type;
+    if (m && s && t) filtered.push(r);
+  }
+  var tbody = document.getElementById('recTable');
+  var empty = document.getElementById('recEmpty');
+  if (!filtered.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  var html = '';
+  for (var i = 0; i < filtered.length; i++) {
+    var r = filtered[i];
+    var recType = r.type || 'borrow';
+    if (recType === 'scrap') {
+      var scrapSpec = r.itemSpec || (r.itemId ? (getItem(r.itemId) || {}).spec : '') || '-';
+      var delBtn = '<button class="btn btn-ghost btn-sm" style="color:var(--danger)" data-delete-id="' + r.id + '">🗑️ 删除</button>';
+      html += '<tr><td><span class="tag tag-danger">🗑️ 报废</span></td>';
+      html += '<td><b>' + esc(scrapSpec) + '</b></td>';
+      html += '<td>' + esc(r.operator || '-') + '</td>';
+      html += '<td>' + (r.scrapQty || 0) + '</td>';
+      html += '<td>' + (r.scrapDate || '-') + '</td>';
+      html += '<td>' + esc(r.scrapReason || '-') + '</td>';
+      html += '<td style="color:var(--text-muted);font-size:12px;max-width:150px;overflow:hidden;text-overflow:ellipsis">' + esc(r.remark || '-') + '</td>';
+      html += '<td style="text-align:right;white-space:nowrap">' + delBtn + '</td></tr>';
+    } else {
+      var stTag = r.status === 'pending' ? '<span class="tag tag-warning">📤 借出中</span>' : r.status === 'returned' ? '<span class="tag tag-success">✅ 已归还</span>' : '<span class="tag tag-info">↩️ 部分归还</span>';
+      var canTransfer = r.status === 'pending' || r.status === 'partial';
+      var transferBtn = canTransfer ? '<button class="btn btn-ghost btn-sm" data-transfer-id="' + r.id + '">🔄 转交</button>' : '';
+      var delBtn = '<button class="btn btn-ghost btn-sm" style="color:var(--danger)" data-delete-id="' + r.id + '">🗑️ 删除</button>';
+      var actions = '<div style="display:flex;gap:4px;justify-content:flex-end">' + transferBtn + delBtn + '</div>';
+      var spec = r.itemSpec || (r.itemId ? (getItem(r.itemId) || {}).spec : '') || '-';
+      html += '<tr><td><span class="tag tag-primary">📝 借出</span></td>';
+      html += '<td><b>' + esc(spec) + '</b></td>';
+      html += '<td>' + esc(r.borrower) + '</td>';
+      html += '<td>' + (r.borrowQty || 0) + '</td>';
+      html += '<td>' + (r.borrowDate || '-') + '</td>';
+      html += '<td>' + stTag + '</td>';
+      html += '<td style="color:var(--text-muted);font-size:12px;max-width:150px;overflow:hidden;text-overflow:ellipsis">' + esc(r.remark || '-') + '</td>';
+      html += '<td style="text-align:right;white-space:nowrap">' + actions + '</td></tr>';
+    }
+  }
+  tbody.innerHTML = html;
+  var transferBtns = tbody.querySelectorAll('[data-transfer-id]');
+  for (var i = 0; i < transferBtns.length; i++) {
+    transferBtns[i].onclick = function() { openTransferModal(this.getAttribute('data-transfer-id')); };
+  }
+  var delBtns = tbody.querySelectorAll('[data-delete-id]');
+  for (var i = 0; i < delBtns.length; i++) {
+    delBtns[i].onclick = function() { deleteRecord(this.getAttribute('data-delete-id')); };
+  }
+}
+
+// ================= DELETE RECORD =================
+function deleteRecord(recId) {
+  if (!recId) return;
+  if (!confirm('确定删除该条记录吗？删除后将不可恢复。')) return;
+  var records = loadRecords();
+  var rec = null;
+  for (var i = 0; i < records.length; i++) { if (records[i].id === recId) { rec = records[i]; break; } }
+  if (!rec) { showToast('记录不存在', 'error'); return; }
+  var recType = rec.type || 'borrow';
+  var items = loadItems();
+  var item = null;
+  for (var i = 0; i < items.length; i++) { if (items[i].id === rec.itemId) { item = items[i]; break; } }
+  if (item) {
+    if (recType === 'scrap') {
+      item.currentQty = (item.currentQty || 0) + (rec.scrapQty || 0);
+      item.totalQty = (item.totalQty || 0) + (rec.scrapQty || 0);
+      item.scrapedQty = Math.max(0, (item.scrapedQty || 0) - (rec.scrapQty || 0));
+    } else {
+      if (rec.status === 'pending') {
+        item.currentQty = (item.currentQty || 0) + (rec.borrowQty || 0);
+        item.borrowedQty = Math.max(0, (item.borrowedQty || 0) - (rec.borrowQty || 0));
+      } else if (rec.status === 'partial') {
+        var pending = (rec.borrowQty || 0) - (rec.returnQty || 0);
+        item.currentQty = (item.currentQty || 0) + pending;
+        item.borrowedQty = Math.max(0, (item.borrowedQty || 0) - pending);
+      } else if (rec.status === 'returned') {
+        item.borrowedQty = Math.max(0, (item.borrowedQty || 0) - (rec.borrowQty || 0));
+      }
+    }
+    saveItems(items);
+  }
+  var newRecords = [];
+  for (var i = 0; i < records.length; i++) { if (records[i].id !== recId) newRecords.push(records[i]); }
+  saveRecords(newRecords);
+  showToast('记录已删除');
+  renderRecords();
+  renderDashboard();
+  renderInventory();
+  initBorrowForm();
+  initReturnForm();
+}
+
+// ================= ALERTS =================
+function renderAlerts() {
+  var items = loadItems();
+  var alerts = [];
+  for (var i = 0; i < items.length; i++) {
+    if ((items[i].currentQty || 0) < (items[i].minQty || 0)) alerts.push(items[i]);
+  }
+  var tbody = document.getElementById('alertTable');
+  var empty = document.getElementById('alertEmpty');
+  if (!alerts.length) { tbody.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+  alerts.sort(function(a, b) { return ((a.currentQty || 0) - (a.minQty || 0)) - ((b.currentQty || 0) - (b.minQty || 0)); });
+  var html = '';
+  for (var i = 0; i < alerts.length; i++) {
+    var it = alerts[i];
+    var gap = (it.minQty || 0) - (it.currentQty || 0);
+    html += '<tr class="danger-row"><td><b>' + esc(it.name) + '</b>' + (it.spec ? ' <span style="color:var(--text-muted);font-size:12px">' + esc(it.spec) + '</span>' : '') + '</td>';
+    html += '<td>' + esc(it.spec || '-') + '</td>';
+    html += '<td>' + esc(it.location || '-') + '</td>';
+    html += '<td style="color:var(--danger);font-weight:700">' + (it.currentQty || 0) + (it.unit ? ' ' + esc(it.unit) : '') + '</td>';
+    html += '<td>' + (it.minQty || 0) + '</td>';
+    html += '<td style="color:var(--danger);font-weight:700">-' + gap + '</td>';
+    html += '<td><span class="tag tag-danger">⚠️ 库存紧张</span></td></tr>';
+  }
+  tbody.innerHTML = html;
+}
+
+// ================= EXPORT / CLEAR =================
+function exportData() {
+  var data = { items: loadItems(), records: loadRecords(), exportedAt: new Date().toISOString() };
+  var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url; a.download = '仓库数据_' + nowDate() + '.json';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+  showToast('数据已导出');
+}
+function clearAllData() {
+  if (!confirm('⚠️ 危险操作！确定清空所有数据吗？此操作不可恢复！')) return;
+  if (!confirm('再次确认：将删除所有物品和借出记录，确定继续？')) return;
+  _memItems = [];
+  _memRecords = [];
+  if (db) {
+    db.items.clear().catch(function(e){});
+    db.records.clear().catch(function(e){});
+  }
+  try { localStorage.removeItem('warehouse_items'); } catch(e){}
+  try { localStorage.removeItem('warehouse_records'); } catch(e){}
+  showToast('数据已清空');
+  renderDashboard(); renderInventory(); renderRecords(); renderAlerts();
+  initBorrowForm(); initReturnForm();
+}
+
+// ================= IMPORT =================
+var _importItems = [];
+var _importRecords = [];
+var _importFileType = '';
+
+function openImportModal() {
+  _importItems = []; _importRecords = []; _importFileType = '';
+  document.getElementById('importFile').value = '';
+  document.getElementById('importOptions').style.display = 'none';
+  document.getElementById('importPreviewWrap').style.display = 'none';
+  document.getElementById('importError').style.display = 'none';
+  document.getElementById('importFormatHint').style.display = 'none';
+  document.getElementById('importConfirmBtn').disabled = true;
+  document.getElementById('importModal').classList.add('show');
+}
+function closeImportModal() { document.getElementById('importModal').classList.remove('show'); }
+
+function tryDecodeBuffer(buffer) {
+  var view = new Uint8Array(buffer);
+  // Detect BOM
+  if (view.length >= 3 && view[0] === 0xEF && view[1] === 0xBB && view[2] === 0xBF) {
+    return new TextDecoder('utf-8').decode(buffer);
+  }
+  if (view.length >= 2 && view[0] === 0xFF && view[1] === 0xFE) {
+    return new TextDecoder('utf-16le').decode(buffer);
+  }
+  if (view.length >= 2 && view[0] === 0xFE && view[1] === 0xFF) {
+    return new TextDecoder('utf-16be').decode(buffer);
+  }
+  // Score-based selection
+  var encodings = ['utf-8', 'gb18030', 'gbk', 'gb2312'];
+  var bestText = null, bestScore = -999999;
+  for (var i = 0; i < encodings.length; i++) {
+    try {
+      var decoder = new TextDecoder(encodings[i], { fatal: false });
+      var text = decoder.decode(buffer);
+      var chinese = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
+      var invalid = (text.match(/\uFFFD/g) || []).length;
+      var score = chinese * 10 - invalid * 100;
+      if (score > bestScore) { bestScore = score; bestText = text; }
+    } catch (e) {}
+  }
+  return bestText || new TextDecoder('utf-8').decode(buffer);
+}
+
+function onImportFileSelect() {
+  var fileInput = document.getElementById('importFile');
+  var file = fileInput.files[0];
+  if (!file) return;
+  var name = file.name.toLowerCase();
+  _importFileType = name.endsWith('.json') ? 'json' : name.endsWith('.csv') ? 'csv' : '';
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    var buffer = e.target.result;
+    var text = tryDecodeBuffer(buffer);
+    if (_importFileType === 'json') {
+      try { parseJSONImport(text); }
+      catch (err) { showImportError('JSON 解析失败：' + (err.message || '格式错误')); }
+    } else if (_importFileType === 'csv') {
+      try { parseCSVImport(text); }
+      catch (err) { showImportError('CSV 解析失败：' + (err.message || '格式错误')); }
+    } else {
+      showImportError('不支持的文件格式，请上传 .json 或 .csv 文件');
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function showImportError(msg) {
+  var el = document.getElementById('importError');
+  el.textContent = msg;
+  el.style.display = 'block';
+  document.getElementById('importOptions').style.display = 'none';
+  document.getElementById('importPreviewWrap').style.display = 'none';
+  document.getElementById('importConfirmBtn').disabled = true;
+}
+
+function parseJSONImport(text) {
+  var data = JSON.parse(text);
+  var items = [], records = [];
+  if (data && Array.isArray(data.items)) { items = data.items; }
+  else if (Array.isArray(data)) { items = data; }
+  if (data && Array.isArray(data.records)) { records = data.records; }
+  if (!items.length && !records.length) { showImportError('未检测到有效数据'); return; }
+  _importItems = items;
+  _importRecords = records;
+  document.getElementById('importOptions').style.display = 'block';
+  document.getElementById('importFormatHint').style.display = 'none';
+  renderImportPreview(items);
+}
+
+function parseCSVImport(text) {
+  var lines = [];
+  var current = '';
+  var inQuotes = false;
+  for (var i = 0; i < text.length; i++) {
+    var ch = text[i];
+    if (inQuotes) {
+      if (ch === '"') {
+        if (text[i + 1] === '"') { current += '"'; i++; }
+        else { inQuotes = false; }
+      } else if (ch === '\r' || ch === '\n') {
+        current += ch;
+      } else { current += ch; }
+    } else {
+      if (ch === '"') { inQuotes = true; }
+      else if (ch === '\r' || ch === '\n') {
+        if (current.length > 0 || lines.length > 0) { lines.push(current); current = ''; }
+      } else { current += ch; }
+    }
+  }
+  if (current.length) lines.push(current);
+  // Clean empty lines
+  var cleanLines = [];
+  for (var i = 0; i < lines.length; i++) { if (lines[i].trim()) cleanLines.push(lines[i]); }
+  if (cleanLines.length < 2) { showImportError('CSV 数据行数不足，请检查文件内容'); return; }
+
+  // Parse header
+  function splitLine(line) {
+    var parts = [];
+    var cur = '', q = false;
+    for (var i = 0; i < line.length; i++) {
+      var ch = line[i];
+      if (q) {
+        if (ch === '"') {
+          if (line[i + 1] === '"') { cur += '"'; i++; }
+          else { q = false; }
+        } else { cur += ch; }
+      } else {
+        if (ch === '"') { q = true; }
+        else if (ch === ',') { parts.push(cur.trim()); cur = ''; }
+        else { cur += ch; }
+      }
+    }
+    parts.push(cur.trim());
+    return parts;
+  }
+
+  var headers = splitLine(cleanLines[0]);
+  var nameIdx = -1, specIdx = -1, catIdx = -1, locIdx = -1, totalIdx = -1, minIdx = -1, unitIdx = -1, remarkIdx = -1;
+  var headerMap = {
+    '项目名称': ['项目名称','物品名称','名称','品名','产品名称','itemname','name'],
+    '型号': ['型号','规格','规格型号','spec','specification'],
+    '分类': ['分类','类别','类型','category','type'],
+    '位置': ['位置','存放位置','location','loc'],
+    '入库数量': ['入库数量','数量','库存','总量','total','qty','数量(个)'],
+    '安全库存': ['安全库存','最低库存','min','安全数量','minqty'],
+    '单位': ['单位','unit','计量单位'],
+    '备注': ['备注','说明','remark','note']
+  };
+  function findIndex(keywords) {
+    for (var i = 0; i < headers.length; i++) {
+      var h = headers[i].toLowerCase().replace(/[\s﻿]/g, '');
+      for (var j = 0; j < keywords.length; j++) {
+        var kw = keywords[j].toLowerCase().replace(/\s/g, '');
+        if (h === kw) return i;
+        if (kw.length >= 3 && h.indexOf(kw) > -1) return i;
+      }
+    }
+    return -1;
+  }
+  nameIdx = findIndex(headerMap['项目名称']);
+  specIdx = findIndex(headerMap['型号']);
+  catIdx = findIndex(headerMap['分类']);
+  locIdx = findIndex(headerMap['位置']);
+  totalIdx = findIndex(headerMap['入库数量']);
+  minIdx = findIndex(headerMap['安全库存']);
+  unitIdx = findIndex(headerMap['单位']);
+  remarkIdx = findIndex(headerMap['备注']);
+
+  if (nameIdx < 0 || totalIdx < 0) {
+    showImportError('未能识别必需的列（项目名称、入库数量），请确保 CSV 表头包含对应列名');
+    return;
+  }
+
+  var items = [];
+  for (var i = 1; i < cleanLines.length; i++) {
+    var cols = splitLine(cleanLines[i]);
+    if (!cols[nameIdx] || !cols[nameIdx].trim()) continue;
+    var totalQty = parseInt(cols[totalIdx]) || 0;
+    items.push({
+      id: uid(), name: cols[nameIdx].trim(), spec: specIdx >= 0 ? (cols[specIdx] || '').trim() : '',
+      category: catIdx >= 0 ? (cols[catIdx] || '').trim() : '',
+      location: locIdx >= 0 ? (cols[locIdx] || '').trim() : '',
+      totalQty: totalQty, minQty: minIdx >= 0 ? (parseInt(cols[minIdx]) || 0) : 0,
+      unit: unitIdx >= 0 ? (cols[unitIdx] || '').trim() : '',
+      remark: remarkIdx >= 0 ? (cols[remarkIdx] || '').trim() : '',
+      currentQty: totalQty, borrowedQty: 0, createdAt: new Date().toISOString()
+    });
+  }
+  if (!items.length) { showImportError('未解析到有效物品数据，请检查 CSV 内容'); return; }
+  _importItems = items; _importRecords = [];
+  document.getElementById('importOptions').style.display = 'block';
+  document.getElementById('importFormatHint').style.display = 'block';
+  renderImportPreview(items);
+}
+
+function renderImportPreview(items) {
+  var wrap = document.getElementById('importPreviewWrap');
+  var table = document.getElementById('importPreviewTable');
+  document.getElementById('importCount').textContent = items.length;
+  var html = '<thead><tr><th>项目名称</th><th>型号</th><th>分类</th><th>位置</th><th>入库数量</th><th>安全库存</th><th>单位</th></tr></thead><tbody>';
+  for (var i = 0; i < Math.min(items.length, 20); i++) {
+    var it = items[i];
+    html += '<tr><td><b>' + esc(it.name) + '</b></td><td>' + esc(it.spec || '-') + '</td><td>' + esc(it.category || '-') + '</td>';
+    html += '<td>' + esc(it.location || '-') + '</td><td>' + (it.totalQty || 0) + '</td><td>' + (it.minQty || 0) + '</td><td>' + esc(it.unit || '-') + '</td></tr>';
+  }
+  if (items.length > 20) {
+    html += '<tr><td colspan="7" style="text-align:center;color:var(--text-muted)">... 还有 ' + (items.length - 20) + ' 条数据未显示 ...</td></tr>';
+  }
+  html += '</tbody>';
+  table.innerHTML = html;
+  wrap.style.display = 'block';
+  document.getElementById('importError').style.display = 'none';
+  document.getElementById('importConfirmBtn').disabled = false;
+}
+
+function confirmImport() {
+  var mode = document.getElementById('importMode').value;
+  var items = _importItems || [];
+  var records = _importRecords || [];
+  if (!items.length && !records.length) { showToast('没有可导入的数据', 'error'); return; }
+
+  if (mode === 'overwrite') {
+    if (!confirm('⚠️ 覆盖模式将清空现有所有数据，确定继续？')) return;
+    saveItems(items);
+    saveRecords(records);
+    showToast('导入成功：已覆盖 ' + items.length + ' 个物品' + (records.length ? '，' + records.length + ' 条记录' : ''));
+  } else {
+    var existing = loadItems();
+    var existingIds = {};
+    for (var i = 0; i < existing.length; i++) existingIds[existing[i].id] = true;
+    var added = 0;
+    for (var i = 0; i < items.length; i++) {
+      if (!existingIds[items[i].id]) { existing.push(items[i]); added++; }
+    }
+    saveItems(existing);
+    if (records.length) {
+      var existingRecs = loadRecords();
+      var existingRecIds = {};
+      for (var i = 0; i < existingRecs.length; i++) existingRecIds[existingRecs[i].id] = true;
+      for (var i = 0; i < records.length; i++) {
+        if (!existingRecIds[records[i].id]) existingRecs.push(records[i]);
+      }
+      saveRecords(existingRecs);
+    }
+    showToast('导入成功：新增 ' + added + ' 个物品' + (records.length ? '，' + records.length + ' 条记录' : ''));
+  }
+  closeImportModal();
+  renderDashboard(); renderInventory(); renderRecords(); renderAlerts();
+  initBorrowForm(); initReturnForm();
+}
+
+// ================= BORROW IMPORT =================
+var _borrowImportRows = [];
+
+function openBorrowImportModal() {
+  _borrowImportRows = [];
+  document.getElementById('borrowImportFile').value = '';
+  document.getElementById('borrowImportHint').style.display = 'none';
+  document.getElementById('borrowImportPreviewWrap').style.display = 'none';
+  document.getElementById('borrowImportError').style.display = 'none';
+  document.getElementById('borrowImportConfirmBtn').disabled = true;
+  document.getElementById('borrowImportModal').classList.add('show');
+}
+function closeBorrowImportModal() { document.getElementById('borrowImportModal').classList.remove('show'); }
+
+function onBorrowImportFileSelect() {
+  var fileInput = document.getElementById('borrowImportFile');
+  var file = fileInput.files[0];
+  if (!file) return;
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      var text = tryDecodeBuffer(e.target.result);
+      parseBorrowCSV(text);
+    }
+    catch (err) { showBorrowImportError('CSV 解析失败：' + (err.message || '格式错误')); }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+function showBorrowImportError(msg) {
+  var el = document.getElementById('borrowImportError');
+  el.textContent = msg;
+  el.style.display = 'block';
+  document.getElementById('borrowImportPreviewWrap').style.display = 'none';
+  document.getElementById('borrowImportConfirmBtn').disabled = true;
+}
+
+function splitCSVLine(line) {
+  var parts = [];
+  var cur = '', q = false;
+  for (var i = 0; i < line.length; i++) {
+    var ch = line[i];
+    if (q) {
+      if (ch === '"') {
+        if (line[i + 1] === '"') { cur += '"'; i++; }
+        else { q = false; }
+      } else { cur += ch; }
+    } else {
+      if (ch === '"') { q = true; }
+      else if (ch === ',') { parts.push(cur.trim()); cur = ''; }
+      else { cur += ch; }
+    }
+  }
+  parts.push(cur.trim());
+  return parts;
+}
+
+function parseBorrowCSV(text) {
+  var lines = [];
+  var current = '';
+  var inQuotes = false;
+  for (var i = 0; i < text.length; i++) {
+    var ch = text[i];
+    if (inQuotes) {
+      if (ch === '"') {
+        if (text[i + 1] === '"') { current += '"'; i++; }
+        else { inQuotes = false; }
+      } else if (ch === '\r' || ch === '\n') { current += ch; }
+      else { current += ch; }
+    } else {
+      if (ch === '"') { inQuotes = true; }
+      else if (ch === '\r' || ch === '\n') { if (current.length > 0 || lines.length > 0) { lines.push(current); current = ''; } }
+      else { current += ch; }
+    }
+  }
+  if (current.length) lines.push(current);
+  var cleanLines = [];
+  for (var i = 0; i < lines.length; i++) { if (lines[i].trim()) cleanLines.push(lines[i]); }
+  if (cleanLines.length < 2) { showBorrowImportError('CSV 数据行数不足，请检查文件内容'); return; }
+
+  var headers = splitCSVLine(cleanLines[0]);
+  var nameIdx = -1, qtyIdx = -1, borrowerIdx = -1, dateIdx = -1, remarkIdx = -1;
+  var headerMap = {
+    '项目名称': ['项目名称','物品名称','名称','品名','产品名称','itemname','name'],
+    '借出数量': ['借出数量','数量','qty','借出','数量(个)'],
+    '借用人': ['借用人','借阅人','borrower','人名','姓名'],
+    '借出日期': ['借出日期','日期','borrowdate','date','借出时间'],
+    '备注': ['备注','说明','remark','note']
+  };
+  function findIndex(keywords) {
+    for (var i = 0; i < headers.length; i++) {
+      var h = headers[i].toLowerCase().replace(/[\\s\uFEFF]/g, '');
+      for (var j = 0; j < keywords.length; j++) {
+        var kw = keywords[j].toLowerCase().replace(/\\s/g, '');
+        if (h === kw) return i;
+        if (kw.length >= 3 && h.indexOf(kw) > -1) return i;
+      }
+    }
+    return -1;
+  }
+  nameIdx = findIndex(headerMap['项目名称']);
+  qtyIdx = findIndex(headerMap['借出数量']);
+  borrowerIdx = findIndex(headerMap['借用人']);
+  dateIdx = findIndex(headerMap['借出日期']);
+  remarkIdx = findIndex(headerMap['备注']);
+
+  if (nameIdx < 0 || qtyIdx < 0 || borrowerIdx < 0) {
+    showBorrowImportError('未能识别必需的列（项目名称、借出数量、借用人），请检查 CSV 表头');
+    return;
+  }
+
+  var items = loadItems();
+  var rows = [];
+  for (var i = 1; i < cleanLines.length; i++) {
+    var cols = splitCSVLine(cleanLines[i]);
+    var name = cols[nameIdx] ? cols[nameIdx].trim() : '';
+    if (!name) continue;
+    var qty = parseInt(cols[qtyIdx]) || 0;
+    if (qty <= 0) continue;
+    var borrower = borrowerIdx >= 0 ? (cols[borrowerIdx] || '').trim() : '';
+    if (!borrower) continue;
+    var borrowDateRaw = dateIdx >= 0 ? (cols[dateIdx] || '').trim() : '';
+    var borrowDate = borrowDateRaw ? borrowDateRaw.replace(/\//g, '-') : nowDate();
+    var remark = remarkIdx >= 0 ? (cols[remarkIdx] || '').trim() : '';
+    // Match item by spec (exact first, then partial), prefer most recent record
+    var matched = null, latestTime = 0;
+    for (var j = 0; j < items.length; j++) {
+      if ((items[j].spec || '').trim() === name) {
+        var t = new Date(items[j].updatedAt || items[j].createdAt || 0).getTime();
+        if (t >= latestTime) { latestTime = t; matched = items[j]; }
+      }
+    }
+    if (!matched) {
+      latestTime = 0;
+      for (var j = 0; j < items.length; j++) {
+        if ((items[j].spec || '').toLowerCase().indexOf(name.toLowerCase()) > -1) {
+          var t = new Date(items[j].updatedAt || items[j].createdAt || 0).getTime();
+          if (t >= latestTime) { latestTime = t; matched = items[j]; }
+        }
+      }
+    }
+    rows.push({
+      name: name, qty: qty, borrower: borrower, borrowDate: borrowDate, remark: remark,
+      matched: matched, status: matched ? ((matched.currentQty || 0) >= qty ? 'ok' : 'short') : 'notfound'
+    });
+  }
+  if (!rows.length) { showBorrowImportError('未解析到有效借出数据，请检查 CSV 内容'); return; }
+  _borrowImportRows = rows;
+  document.getElementById('borrowImportHint').style.display = 'block';
+  renderBorrowImportPreview(rows);
+}
+
+function renderBorrowImportPreview(rows) {
+  var valid = 0;
+  for (var i = 0; i < rows.length; i++) { if (rows[i].status === 'ok') valid++; }
+  document.getElementById('borrowImportCount').textContent = rows.length;
+  document.getElementById('borrowImportValid').textContent = valid;
+  var table = document.getElementById('borrowImportPreviewTable');
+  var html = '<thead><tr><th>物品</th><th>借出数量</th><th>借用人</th><th>借出日期</th><th>可用库存</th><th>状态</th></tr></thead><tbody>';
+  for (var i = 0; i < Math.min(rows.length, 20); i++) {
+    var r = rows[i];
+    var stTag = r.status === 'ok' ? '<span class="tag tag-success">✅ 可借出</span>' :
+                r.status === 'short' ? '<span class="tag tag-danger">⚠️ 库存不足</span>' :
+                '<span class="tag tag-warning">❓ 未匹配</span>';
+    var avail = r.matched ? (r.matched.currentQty || 0) + (r.matched.unit ? ' ' + esc(r.matched.unit) : '') : '-';
+    html += '<tr><td><b>' + esc(r.name) + '</b></td>';
+    html += '<td>' + r.qty + '</td>';
+    html += '<td>' + esc(r.borrower) + '</td>';
+    html += '<td>' + esc(r.borrowDate) + '</td>';
+    html += '<td>' + esc(avail) + '</td>';
+    html += '<td>' + stTag + '</td></tr>';
+  }
+  if (rows.length > 20) {
+    html += '<tr><td colspan="6" style="text-align:center;color:var(--text-muted)">... 还有 ' + (rows.length - 20) + ' 条数据未显示 ...</td></tr>';
+  }
+  html += '</tbody>';
+  table.innerHTML = html;
+  document.getElementById('borrowImportPreviewWrap').style.display = 'block';
+  document.getElementById('borrowImportError').style.display = 'none';
+  document.getElementById('borrowImportConfirmBtn').disabled = valid === 0;
+}
+
+function confirmBorrowImport() {
+  var rows = _borrowImportRows || [];
+  if (!rows.length) { showToast('没有可导入的数据', 'error'); return; }
+  var items = loadItems();
+  var records = loadRecords();
+  var success = 0, fail = 0;
+  for (var i = 0; i < rows.length; i++) {
+    var r = rows[i];
+    if (r.status !== 'ok' || !r.matched) { fail++; continue; }
+    var it = null;
+    for (var j = 0; j < items.length; j++) {
+      if (items[j].id === r.matched.id) { it = items[j]; break; }
+    }
+    if (!it || (it.currentQty || 0) < r.qty) { fail++; continue; }
+    it.currentQty = (it.currentQty || 0) - r.qty;
+    it.borrowedQty = (it.borrowedQty || 0) + r.qty;
+    var rec = {
+      id: uid(), itemId: it.id, itemName: it.name, itemSpec: it.spec || '', borrower: r.borrower, borrowQty: r.qty,
+      borrowDate: r.borrowDate, expectedReturnDate: '', status: 'pending', returnDate: '',
+      returnQty: 0, remark: r.remark, createdAt: new Date().toISOString()
+    };
+    records.unshift(rec);
+    success++;
+  }
+  saveItems(items);
+  saveRecords(records);
+  showToast('批量借出导入完成：成功 ' + success + ' 条' + (fail ? '，失败 ' + fail + ' 条' : ''));
+  closeBorrowImportModal();
+  renderDashboard();
+  initBorrowForm();
+  initReturnForm();
+  renderRecords();
+  renderAlerts();
+}
+
+// ================= PIVOT TABLE =================
+var _pivotResult = null;
+
+var PIVOT_CONFIG = {
+  items: {
+    label: '库存物品',
+    dimensions: [
+      { key: 'category', label: '分类' },
+      { key: 'spec', label: '型号' },
+      { key: 'location', label: '位置' },
+      { key: 'name', label: '项目名称' }
+    ],
+    measures: [
+      { key: 'currentQty', label: '当前库存' },
+      { key: 'totalQty', label: '入库数量' },
+      { key: 'borrowedQty', label: '借出数量' },
+      { key: 'minQty', label: '安全库存' }
+    ]
+  },
+  records: {
+    label: '借出记录',
+    dimensions: [
+      { key: 'borrower', label: '借用人' },
+      { key: 'status', label: '状态' },
+      { key: 'month', label: '借出月份' },
+      { key: 'itemName', label: '项目名称' }
+    ],
+    measures: [
+      { key: 'borrowQty', label: '借出数量' },
+      { key: 'returnQty', label: '归还数量' }
+    ]
+  }
+};
+
+function openPivotModal() {
+  _pivotResult = null;
+  document.getElementById('pivotError').style.display = 'none';
+  document.getElementById('pivotResultWrap').style.display = 'none';
+  document.getElementById('pivotExportBtn').style.display = 'none';
+  onPivotSourceChange();
+  document.getElementById('pivotModal').classList.add('show');
+}
+function closePivotModal() { document.getElementById('pivotModal').classList.remove('show'); }
+
+function showPivotError(msg) {
+  var el = document.getElementById('pivotError');
+  el.textContent = msg;
+  el.style.display = 'block';
+  document.getElementById('pivotResultWrap').style.display = 'none';
+  document.getElementById('pivotExportBtn').style.display = 'none';
+}
+
+function onPivotSourceChange() {
+  var source = document.getElementById('pivotSource').value;
+  var cfg = PIVOT_CONFIG[source];
+  var rowSel = document.getElementById('pivotRow');
+  var colSel = document.getElementById('pivotCol');
+  var valSel = document.getElementById('pivotValue');
+  var opts = '<option value="">请选择</option>';
+  for (var i = 0; i < cfg.dimensions.length; i++) {
+    opts += '<option value="' + cfg.dimensions[i].key + '">' + cfg.dimensions[i].label + '</option>';
+  }
+  rowSel.innerHTML = opts;
+  colSel.innerHTML = '<option value="">无</option>' + opts;
+  var vopts = '<option value="">请选择</option>';
+  for (var i = 0; i < cfg.measures.length; i++) {
+    vopts += '<option value="' + cfg.measures[i].key + '">' + cfg.measures[i].label + '</option>';
+  }
+  valSel.innerHTML = vopts;
+}
+
+function getPivotValue(item, key, source) {
+  if (source === 'records' && key === 'month') {
+    var d = item.borrowDate || '';
+    return d ? d.substring(0, 7) : '未知';
+  }
+  if (key === 'status') {
+    var s = item[key] || '';
+    if (s === 'pending') return '借出中';
+    if (s === 'returned') return '已归还';
+    if (s === 'partial') return '部分归还';
+    return s || '未知';
+  }
+  return item[key] || '未知';
+}
+
+function aggValues(values, method) {
+  if (!values.length) return 0;
+  if (method === 'count') return values.length;
+  if (method === 'sum') {
+    var s = 0;
+    for (var i = 0; i < values.length; i++) s += (parseFloat(values[i]) || 0);
+    return s;
+  }
+  if (method === 'avg') {
+    var s = 0, c = 0;
+    for (var i = 0; i < values.length; i++) { var v = parseFloat(values[i]); if (!isNaN(v)) { s += v; c++; } }
+    return c ? Math.round(s / c * 100) / 100 : 0;
+  }
+  if (method === 'max') {
+    var m = -Infinity;
+    for (var i = 0; i < values.length; i++) { var v = parseFloat(values[i]); if (!isNaN(v) && v > m) m = v; }
+    return m === -Infinity ? 0 : m;
+  }
+  if (method === 'min') {
+    var m = Infinity;
+    for (var i = 0; i < values.length; i++) { var v = parseFloat(values[i]); if (!isNaN(v) && v < m) m = v; }
+    return m === Infinity ? 0 : m;
+  }
+  return 0;
+}
+
+function generatePivotTable() {
+  var source = document.getElementById('pivotSource').value;
+  var rowKey = document.getElementById('pivotRow').value;
+  var colKey = document.getElementById('pivotCol').value;
+  var valKey = document.getElementById('pivotValue').value;
+  var agg = document.getElementById('pivotAgg').value;
+  if (!rowKey) { showPivotError('请选择行维度'); return; }
+  if (!valKey) { showPivotError('请选择数值字段'); return; }
+
+  var data = source === 'items' ? loadItems() : loadRecords();
+  if (!data.length) { showPivotError('数据源为空，暂无数据可分析'); return; }
+
+  // Build pivot structure
+  var rows = {};
+  var cols = {};
+  for (var i = 0; i < data.length; i++) {
+    var item = data[i];
+    var rVal = getPivotValue(item, rowKey, source);
+    var cVal = colKey ? getPivotValue(item, colKey, source) : '';
+    var v = source === 'items' ? (item[valKey] || 0) : (item[valKey] || 0);
+    if (!rows[rVal]) rows[rVal] = {};
+    if (colKey) {
+      if (!rows[rVal][cVal]) rows[rVal][cVal] = [];
+      rows[rVal][cVal].push(v);
+      cols[cVal] = true;
+    } else {
+      if (!rows[rVal]['_total']) rows[rVal]['_total'] = [];
+      rows[rVal]['_total'].push(v);
+    }
+  }
+
+  var rowLabels = Object.keys(rows).sort();
+  var colLabels = colKey ? Object.keys(cols).sort() : [];
+
+  // Build result table
+  var html = '<thead><tr><th>' + esc(getDimLabel(source, rowKey)) + '</th>';
+  for (var i = 0; i < colLabels.length; i++) {
+    html += '<th>' + esc(colLabels[i]) + '</th>';
+  }
+  html += '<th class="pivot-total">合计</th></tr></thead><tbody>';
+
+  var grandTotal = [];
+  var colTotals = {};
+  for (var i = 0; i < colLabels.length; i++) colTotals[colLabels[i]] = [];
+
+  for (var i = 0; i < rowLabels.length; i++) {
+    var rLabel = rowLabels[i];
+    var row = rows[rLabel];
+    var rowTotal = [];
+    html += '<tr><td><b>' + esc(rLabel) + '</b></td>';
+    for (var j = 0; j < colLabels.length; j++) {
+      var cLabel = colLabels[j];
+      var vals = row[cLabel] || [];
+      var aggVal = aggValues(vals, agg);
+      html += '<td>' + formatNum(aggVal) + '</td>';
+      if (vals.length) {
+        for (var k = 0; k < vals.length; k++) { rowTotal.push(vals[k]); colTotals[cLabel].push(vals[k]); grandTotal.push(vals[k]); }
+      }
+    }
+    if (!colKey) {
+      var vals = row['_total'] || [];
+      var aggVal = aggValues(vals, agg);
+      html += '<td class="pivot-total">' + formatNum(aggVal) + '</td>';
+      for (var k = 0; k < vals.length; k++) grandTotal.push(vals[k]);
+    } else {
+      html += '<td class="pivot-total">' + formatNum(aggValues(rowTotal, agg)) + '</td>';
+    }
+    html += '</tr>';
+  }
+
+  // Grand total row
+  html += '<tr><td class="pivot-grand"><b>合计</b></td>';
+  for (var i = 0; i < colLabels.length; i++) {
+    html += '<td class="pivot-grand">' + formatNum(aggValues(colTotals[colLabels[i]], agg)) + '</td>';
+  }
+  html += '<td class="pivot-grand">' + formatNum(aggValues(grandTotal, agg)) + '</td></tr>';
+  html += '</tbody>';
+
+  document.getElementById('pivotResultTable').innerHTML = html;
+  document.getElementById('pivotResultWrap').style.display = 'block';
+  document.getElementById('pivotError').style.display = 'none';
+  document.getElementById('pivotExportBtn').style.display = 'inline-flex';
+
+  var summary = '共 ' + data.length + ' 条数据';
+  if (colKey) summary += '，' + rowLabels.length + ' 行 × ' + colLabels.length + ' 列';
+  else summary += '，按 ' + getDimLabel(source, rowKey) + ' 分组';
+  summary += '，聚合：' + getAggLabel(agg) + '(' + getMeasureLabel(source, valKey) + ')';
+  document.getElementById('pivotSummary').textContent = summary;
+
+  _pivotResult = { source: source, rowKey: rowKey, colKey: colKey, valKey: valKey, agg: agg, rows: rows, rowLabels: rowLabels, colLabels: colLabels };
+}
+
+function getDimLabel(source, key) {
+  var cfg = PIVOT_CONFIG[source];
+  for (var i = 0; i < cfg.dimensions.length; i++) { if (cfg.dimensions[i].key === key) return cfg.dimensions[i].label; }
+  return key;
+}
+function getMeasureLabel(source, key) {
+  var cfg = PIVOT_CONFIG[source];
+  for (var i = 0; i < cfg.measures.length; i++) { if (cfg.measures[i].key === key) return cfg.measures[i].label; }
+  return key;
+}
+function getAggLabel(agg) {
+  var map = { sum: '求和', count: '计数', avg: '平均值', max: '最大值', min: '最小值' };
+  return map[agg] || agg;
+}
+function formatNum(n) {
+  if (n === Math.floor(n)) return n;
+  return Math.round(n * 100) / 100;
+}
+
+function exportPivotTable() {
+  if (!_pivotResult) return;
+  var r = _pivotResult;
+  var lines = [];
+  var header = [getDimLabel(r.source, r.rowKey)];
+  for (var i = 0; i < r.colLabels.length; i++) header.push(r.colLabels[i]);
+  header.push('合计');
+  lines.push(header.join(','));
+
+  var colTotals = {};
+  for (var i = 0; i < r.colLabels.length; i++) colTotals[r.colLabels[i]] = [];
+  var grandTotal = [];
+
+  for (var i = 0; i < r.rowLabels.length; i++) {
+    var rowLabel = r.rowLabels[i];
+    var row = r.rows[rowLabel];
+    var rowTotal = [];
+    var line = [rowLabel];
+    for (var j = 0; j < r.colLabels.length; j++) {
+      var cLabel = r.colLabels[j];
+      var vals = row[cLabel] || [];
+      line.push(aggValues(vals, r.agg));
+      for (var k = 0; k < vals.length; k++) { rowTotal.push(vals[k]); colTotals[cLabel].push(vals[k]); grandTotal.push(vals[k]); }
+    }
+    if (!r.colKey) {
+      var vals = row['_total'] || [];
+      line.push(aggValues(vals, r.agg));
+      for (var k = 0; k < vals.length; k++) grandTotal.push(vals[k]);
+    } else {
+      line.push(aggValues(rowTotal, r.agg));
+    }
+    lines.push(line.join(','));
+  }
+
+  var totalLine = ['合计'];
+  for (var i = 0; i < r.colLabels.length; i++) {
+    totalLine.push(aggValues(colTotals[r.colLabels[i]], r.agg));
+  }
+  totalLine.push(aggValues(grandTotal, r.agg));
+  lines.push(totalLine.join(','));
+
+  var blob = new Blob(['\uFEFF' + lines.join('\n')], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = '透视表_' + nowDate() + '.csv';
+  document.body.appendChild(a); a.click(); a.remove();
+  URL.revokeObjectURL(url);
+  showToast('透视表已导出');
+}
+
+// ================= INIT =================
+
+function showStorageModal() {
+  renderStorageInfo();
+  document.getElementById('storageModal').classList.add('show');
+}
+function closeStorageModal() { document.getElementById('storageModal').classList.remove('show'); }
+function renderStorageInfo() {
+  var c = window._lsCapacity ? window._lsCapacity.check() : { used: 0, limit: 5*1024*1024, pct: 0, usedMB: '0.00' };
+  var info = document.getElementById('storageInfo');
+  var detail = document.getElementById('storageDetail');
+  var barColor = c.pct >= 80 ? 'var(--danger)' : c.pct >= 60 ? 'var(--warning)' : 'var(--success)';
+  var statusText = c.pct >= 80 ? '严重不足，请立即清理' : c.pct >= 60 ? '偏高，建议备份清理' : '空间充足';
+  info.innerHTML = '<div style="margin-bottom:8px"><b>总占用：</b><span style="color:' + barColor + ';font-weight:700">' + c.usedMB + 'MB</span> / ~5MB（' + statusText + '）</div>' +
+    '<div style="width:100%;height:8px;background:#e2e8f0;border-radius:4px;overflow:hidden">' +
+    '<div style="width:' + Math.min(c.pct, 100) + '%;height:100%;background:' + barColor + ';transition:width .3s"></div></div>';
+  var itemsJson = JSON.stringify(_memItems || []);
+  var recordsJson = JSON.stringify(_memRecords || []);
+  var itemsLen = (itemsJson.length * 2 / 1024).toFixed(1);
+  var recordsLen = (recordsJson.length * 2 / 1024).toFixed(1);
+  var itemsCount = _memItems.length;
+  var recordsCount = _memRecords.length;
+  detail.innerHTML = '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>库存物品 (' + itemsCount + ' 条)</span><span>' + itemsLen + ' KB</span></div>' +
+    '<div style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid var(--border)"><span>借出记录 (' + recordsCount + ' 条)</span><span>' + recordsLen + ' KB</span></div>' +
+    '<div style="display:flex;justify-content:space-between;padding:4px 0;font-weight:700"><span>合计</span><span>' + c.usedMB + ' MB</span></div>';
+}
+
+// ================= TRANSFER =================
+var _transferRecordOptions = '';
+function openTransferModal(recordId) {
+  document.getElementById('transferModal').classList.add('show');
+  initTransferForm(recordId);
+}
+function closeTransferModal() {
+  document.getElementById('transferModal').classList.remove('show');
+}
+function initTransferForm(recordId) {
+  var sel = document.getElementById('transferRecord');
+  var records = loadRecords();
+  var html = '<option value="">请选择一条借出记录</option>';
+  for (var i = 0; i < records.length; i++) {
+    var r = records[i];
+    if (r.status === 'pending' || r.status === 'partial') {
+      var pending = (r.borrowQty || 0) - (r.returnQty || 0);
+      html += '<option value="' + r.id + '">' + esc(r.itemName) + ' → ' + esc(r.borrower) + ' (借' + r.borrowQty + '，还' + (r.returnQty || 0) + '，待还' + pending + ')</option>';
+    }
+  }
+  _transferRecordOptions = html;
+  sel.innerHTML = html;
+  if (recordId) sel.value = recordId;
+  document.getElementById('transferPending').value = '';
+  document.getElementById('transferNewBorrower').value = '';
+  document.getElementById('transferDate').value = nowDate();
+  document.getElementById('transferRemark').value = '';
+  onTransferRecordChange();
+}
+function filterTransferRecords(query) {
+  var sel = document.getElementById('transferRecord');
+  var q = (query || '').toLowerCase();
+  if (!q) { sel.innerHTML = _transferRecordOptions; return; }
+  var opts = _transferRecordOptions.split('</option>');
+  var filtered = '<option value="">请选择一条借出记录</option>';
+  for (var i = 0; i < opts.length; i++) {
+    if (opts[i].indexOf('<option') === -1) continue;
+    var text = opts[i].replace(/<[^>]+>/g, '').toLowerCase();
+    if (text.indexOf(q) > -1) filtered += opts[i] + '</option>';
+  }
+  sel.innerHTML = filtered;
+}
+function onTransferRecordChange() {
+  var id = document.getElementById('transferRecord').value;
+  var records = loadRecords();
+  var rec = null;
+  for (var i = 0; i < records.length; i++) { if (records[i].id === id) { rec = records[i]; break; } }
+  if (!rec) { document.getElementById('transferPending').value = ''; return; }
+  var pending = (rec.borrowQty || 0) - (rec.returnQty || 0);
+  document.getElementById('transferPending').value = pending + ' 待还';
+}
+function submitTransfer() {
+  var recId = document.getElementById('transferRecord').value;
+  var newBorrower = document.getElementById('transferNewBorrower').value.trim();
+  var transferDate = document.getElementById('transferDate').value;
+  var remark = document.getElementById('transferRemark').value.trim();
+  if (!recId) { showToast('请选择借出记录', 'error'); return; }
+  if (!newBorrower) { showToast('请填写新借用人', 'error'); return; }
+  if (!transferDate) { showToast('请填写转交日期', 'error'); return; }
+  var records = loadRecords();
+  var rec = null, recIdx = -1;
+  for (var i = 0; i < records.length; i++) { if (records[i].id === recId) { rec = records[i]; recIdx = i; break; } }
+  if (!rec) { showToast('记录不存在', 'error'); return; }
+  if (rec.status !== 'pending' && rec.status !== 'partial') { showToast('该记录不可转交', 'error'); return; }
+  var oldBorrower = rec.borrower;
+  rec.borrower = newBorrower;
+  var transferNote = '从 ' + oldBorrower + ' 转交给 ' + newBorrower + ' (' + transferDate + ')';
+  if (remark) transferNote += ' - ' + remark;
+  rec.remark = (rec.remark ? rec.remark + ' | ' : '') + transferNote;
+  saveRecords(records);
+  showToast('转交成功：' + esc(rec.itemName) + ' 从 ' + esc(oldBorrower) + ' 转交给 ' + esc(newBorrower));
+  closeTransferModal();
+  renderRecords();
+  renderDashboard();
+}
+
+window.addEventListener('DOMContentLoaded', async function() {
+  await initDB();
+  renderDashboard();
+  renderInventory();
+  initBorrowForm();
+  initReturnForm();
+  initScrapForm();
+  renderRecords();
+  renderAlerts();
+  initReportPage();
+  if (window._dbCapacity) {
+    window._dbCapacity.renderStatus();
+    setInterval(function() { window._dbCapacity.renderStatus(); }, 30000);
+    var level = window._dbCapacity.warn(false);
+    if (level === 'danger') {
+      showToast('IndexedDB 容量严重不足，请立即导出备份并清理数据！', 'error');
+    } else if (level === 'warning') {
+      showToast('IndexedDB 容量警告，建议导出备份', 'warning');
+    }
+  }
+});
+</script>
+
+<!-- Modal: Storage Management -->
+<div class="modal-overlay" id="storageModal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">存储管理</div><button class="modal-close" onclick="closeStorageModal()">×</button></div>
+    <div class="modal-body">
+      <div id="storageInfo" style="margin-bottom:16px"></div>
+      <div style="background:var(--surface);border-radius:12px;padding:16px;border:1px solid var(--border);margin-bottom:16px">
+        <div style="font-weight:600;margin-bottom:10px;font-size:13px">各数据占用</div>
+        <div id="storageDetail" style="font-size:12px;line-height:1.8"></div>
+      </div>
+      <div style="background:var(--warning-light);color:#92400e;padding:10px 14px;border-radius:8px;font-size:12px;line-height:1.6;margin-bottom:10px">
+        <b>清理建议：</b><br>
+        定期导出 JSON 备份后，点击「清空数据」释放空间<br>
+        删除不再需要的物品和记录可减少占用<br>
+        浏览器 IndexedDB 通常限制 50MB 起步，数据长期保存在本地
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-ghost" onclick="closeStorageModal()">关闭</button>
+      <button type="button" class="btn btn-primary" onclick="exportData();closeStorageModal()">导出备份</button>
+      <button type="button" class="btn btn-danger" onclick="clearAllData();closeStorageModal()">清空数据</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Transfer Record -->
+<div class="modal-overlay" id="transferModal">
+  <div class="modal">
+    <div class="modal-header"><div class="modal-title">🔄 转交登记</div><button class="modal-close" onclick="closeTransferModal()">×</button></div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group" style="flex:2">
+          <label class="form-label">选择借出记录 *</label>
+          <input type="text" class="form-input" id="transferRecordSearch" placeholder="🔍 搜索物品 / 借用人..." oninput="filterTransferRecords(this.value)" style="margin-bottom:6px">
+          <select class="form-select" id="transferRecord" required onchange="onTransferRecordChange()"><option value="">请选择一条借出记录</option></select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">待还数量</label>
+          <input type="text" class="form-input" id="transferPending" readonly placeholder="-">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group" style="flex:2">
+          <label class="form-label">新借用人 *</label>
+          <input type="text" class="form-input" id="transferNewBorrower" required placeholder="输入新借用人姓名">
+        </div>
+        <div class="form-group">
+          <label class="form-label">转交日期 *</label>
+          <input type="date" class="form-input" id="transferDate" required>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">备注</label>
+        <textarea class="form-textarea" id="transferRemark" placeholder="可选：转交原因等"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-ghost" onclick="closeTransferModal()">取消</button>
+      <button type="button" class="btn btn-primary" onclick="submitTransfer()">🔄 确认转交</button>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

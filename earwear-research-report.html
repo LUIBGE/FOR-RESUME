@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>耳机与穿戴品类 · 国内电商代理服务商候选调研报告</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%230D1B26'/%3E%3Cpath d='M9 14v4M13 11v10M17 13v6M21 9v14M25 12v8' stroke='%233CC4C9' stroke-width='2.4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap">
+<style>
+:root{
+  --navy:#0D1B26; --navy2:#13283A; --ink:#1C2B36; --ink2:#5B6B78;
+  --teal:#0E7490; --teal2:#3E9BB4; --teal3:#164E62;
+  --amber:#E8A33D; --amber2:#F0BE6B;
+  --bg:#F4F6F8; --card:#FFFFFF; --line:#E3E8ED; --line2:#D4DCE2;
+  --ok:#0F766E;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:"Noto Sans SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.65;font-size:15px}
+.container{max-width:1180px;margin:0 auto;padding:0 24px}
+/* ===== Hero ===== */
+.hero{background:var(--navy);color:#EAF2F6;padding:64px 0 72px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;background:
+  radial-gradient(680px 320px at 82% -10%,rgba(62,155,180,.28),transparent 65%),
+  radial-gradient(520px 300px at 8% 110%,rgba(232,163,61,.16),transparent 60%);}
+.hero .container{position:relative}
+.hero-body{display:flex;align-items:center;gap:48px}
+.hero-text{flex:1;min-width:0}
+.hero h1{font-size:clamp(26px,3.6vw,40px);font-weight:900;letter-spacing:.02em;line-height:1.28;max-width:15em}
+.hero h1 em{font-style:normal;color:#3CC4C9}
+.hero .sub{margin-top:16px;color:#9FB4C2;font-size:15px;max-width:44em}
+.hero-fig{flex:none;width:min(46%,520px)}
+.hero-fig img{display:block;width:100%;border-radius:16px;border:1px solid rgba(255,255,255,.14);box-shadow:0 24px 60px rgba(0,0,0,.45)}
+/* ===== Sections ===== */
+section{margin-top:56px}
+.sec-head{display:flex;align-items:baseline;gap:16px;margin-bottom:22px}
+.sec-no{font-size:13px;font-weight:900;letter-spacing:.18em;color:var(--teal);white-space:nowrap}
+.sec-title{font-size:22px;font-weight:900;color:var(--navy)}
+.sec-desc{font-size:13px;color:var(--ink2);margin-left:auto;text-align:right;max-width:30em}
+h2.tight{font-size:22px;font-weight:900;color:var(--navy)}
+/* charts */
+.chart-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.chart-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px 20px 12px}
+.chart-card.wide{grid-column:1 / -1}
+.chart-card h3{font-size:15px;font-weight:700;color:var(--navy)}
+.chart-card .sub{font-size:12px;color:var(--ink2);margin:2px 0 6px}
+.chart{width:100%;height:320px}
+.chart.short{height:280px}
+/* top profiles */
+.top-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.profile{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:20px;display:flex;flex-direction:column}
+.profile .rank{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.score-badge{flex:none;width:38px;height:38px;border-radius:10px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;font-weight:900;line-height:1}
+.score-badge .s{font-size:16px}
+.score-badge .t{font-size:9px;font-weight:500;opacity:.85}
+.s5{background:#0F766E}.s45{background:#0E7490}.s4{background:#2A8FAC}.s35{background:#E8A33D}.s3{background:#9AA8B4}
+.profile h3{font-size:16px;font-weight:900;color:var(--navy)}
+.profile .full{font-size:11.5px;color:var(--ink2);margin-top:2px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 12px}
+.tag{font-size:11px;padding:2px 8px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2);background:#F7F9FB}
+.tag.teal{color:var(--teal);border-color:#BBDDE6;background:#EEF7FA}
+.tag.amber{color:#A86A14;border-color:#F0DCBB;background:#FCF6EC}
+.profile ul{list-style:none;margin-top:auto}
+.profile li{font-size:12.5px;color:var(--ink);padding:4px 0 4px 18px;position:relative;border-top:1px dashed #EFF2F5}
+.profile li::before{content:"";position:absolute;left:2px;top:11px;width:6px;height:6px;border-radius:50%;background:var(--teal2)}
+.profile li:first-child{border-top:none}
+.profile li b{color:var(--navy)}
+/* tiers */
+.tier{background:var(--card);border:1px solid var(--line);border-left:4px solid var(--teal);border-radius:10px;padding:18px 22px;margin-bottom:12px}
+.tier .t-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tier .t-no{font-size:12px;font-weight:900;letter-spacing:.12em;color:#fff;padding:3px 10px;border-radius:6px}
+.tier .t-name{font-size:16px;font-weight:900;color:var(--navy)}
+.tier .t-count{font-size:12px;color:var(--ink2)}
+.tier p{font-size:13px;color:var(--ink2);margin-top:6px}
+.tier .members{margin-top:10px;display:flex;flex-wrap:wrap;gap:6px}
+.member{font-size:11.5px;background:#F1F5F7;border:1px solid var(--line);color:var(--ink);padding:2px 9px;border-radius:6px}
+.member.hot{background:#EEF7FA;border-color:#BBDDE6;color:var(--teal3)}
+.t1{border-left-color:#0F766E}.t1 .t-no{background:#0F766E}
+.t2{border-left-color:#0E7490}.t2 .t-no{background:#0E7490}
+.t3{border-left-color:#E8A33D}.t3 .t-no{background:#E8A33D}
+.t4{border-left-color:#9AA8B4}.t4 .t-no{background:#9AA8B4}
+/* table */
+.controls{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:14px;align-items:center}
+.controls input,.controls select{height:36px;border:1px solid var(--line2);border-radius:8px;padding:0 12px;font-size:13px;background:#fff;color:var(--ink);font-family:inherit}
+.controls input{flex:1;min-width:200px}
+.controls select{min-width:150px}
+.btn{height:36px;border:1px solid var(--line2);border-radius:8px;background:#fff;color:var(--ink2);padding:0 14px;font-size:13px;cursor:pointer;font-family:inherit}
+.btn:hover{border-color:var(--teal);color:var(--teal)}
+.tbl-wrap{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px;min-width:840px}
+colgroup col.c1{width:26%} colgroup col.c2{width:20%} colgroup col.c3{width:9%} colgroup col.c4{width:15%} colgroup col.c5{width:7%} colgroup col.c6{width:9%} colgroup col.c7{width:14%}
+thead th{background:#F0F4F7;color:var(--navy);font-weight:700;font-size:12px;padding:10px 12px;text-align:left;border-bottom:1px solid var(--line2);white-space:nowrap}
+tbody td{padding:10px 12px;border-bottom:1px solid #EEF1F4;vertical-align:middle;color:var(--ink)}
+tbody tr.cat-row{cursor:pointer;transition:background .12s}
+tbody tr.cat-row:hover{background:#F4FAFC}
+tbody tr.detail-row td{background:#FAFCFD;border-bottom:1px solid var(--line)}
+td .cname{font-weight:700;color:var(--navy)}
+td .snum{display:inline-flex;align-items:center;gap:4px}
+.mode-chip{display:inline-block;font-size:11px;padding:2px 8px;border-radius:6px;background:#F1F5F7;border:1px solid var(--line);color:var(--ink2);white-space:normal;line-height:1.4;max-width:100%}
+.detail-box{display:grid;grid-template-columns:1fr 1fr;gap:8px 22px;padding:4px 0}
+.detail-box .d-item{font-size:12.5px;color:var(--ink2)}
+.detail-box .d-item b{color:var(--navy)}
+.detail-box .d-reasons{grid-column:1/-1;font-size:12.5px;color:var(--ink2)}
+.detail-box .d-reasons b{color:var(--navy)}
+.empty{text-align:center;padding:32px;color:var(--ink2);font-size:13px}
+.countline{font-size:12px;color:var(--ink2);padding:10px 14px;border-top:1px solid var(--line)}
+.scroll-hint{display:none}
+/* footer */
+.footer{margin-top:64px;background:var(--navy);color:#9FB4C2;padding:32px 0 40px;font-size:12.5px}
+.footer .note{color:#8FA6B6}
+/* responsive */
+@media(max-width:900px){
+  .hero-body{flex-direction:column;align-items:flex-start;gap:32px}
+  .hero-fig{width:100%}
+  .chart-grid,.top-grid{grid-template-columns:1fr}
+  .chart-card.wide{grid-column:auto}
+  .sec-desc{display:none}
+  .detail-box{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .container{padding:0 16px}
+  .hero{padding:44px 0 52px}
+  body{font-size:15px}
+  table{font-size:12px}
+  .btn{min-height:44px;padding:0 16px}
+  .controls input,.controls select{font-size:16px}
+  .scroll-hint{display:block;font-size:11px;color:#8AA0AE;padding:8px 14px 4px;text-align:right}
+}
+</style>
+</head>
+<body>
+
+<!-- ===== Hero ===== -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-body">
+      <div class="hero-text">
+        <h1>耳机与穿戴品类 · 国内电商<em>代理服务商</em>候选调研报告</h1>
+        <p class="sub">基于内部候选清单的结构化盘点：98 家候选企业的品类能力、运营模式、地域分布与合作潜力评估，为品类渠道合作选型提供依据。</p>
+      </div>
+      <figure class="hero-fig">
+        <img src="assets/hero.jpg" alt="耳机与穿戴设备产品主视觉：TWS 无线耳机、智能手表与手环">
+      </figure>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- ===== 01 候选池全景 ===== -->
+  <section id="panorama">
+    <div class="sec-head"><span class="sec-no">01</span><h2 class="sec-title">候选池全景：评分、类别、模式与地域</h2><span class="sec-desc">评分呈金字塔结构，头部集中、长尾充裕；供应链集群效应明显</span></div>
+    <div class="chart-grid">
+      <div class="chart-card">
+        <h3>合作潜力评分分布</h3><div class="sub">按「全部-按评分排序」表统计，98 家</div>
+        <div class="chart short" id="chartScore"></div>
+      </div>
+      <div class="chart-card">
+        <h3>候选类别构成</h3><div class="sub">四类合作形态：品牌商 / 代工厂 / TP 与分销</div>
+        <div class="chart short" id="chartCat"></div>
+      </div>
+      <div class="chart-card">
+        <h3>运营模式构成</h3><div class="sub">品牌自营系合计 59 家（60.2%），为绝对主流</div>
+        <div class="chart short" id="chartMode"></div>
+      </div>
+      <div class="chart-card">
+        <h3>总部地域分布</h3><div class="sub">广东（深圳为主）71 家，占 72.4%</div>
+        <div class="chart short" id="chartReg"></div>
+      </div>
+      <div class="chart-card wide">
+        <h3>类别 × 品类运营经验覆盖</h3><div class="sub">各类别中明确具备「耳机 / 穿戴」运营经验的企业占比（%）；耳机与穿戴经验明显互补错位</div>
+        <div class="chart" id="chartExp"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 02 头部候选深度解读 ===== -->
+  <section id="top">
+    <div class="sec-head"><span class="sec-no">02</span><h2 class="sec-title">头部候选深度解读（评分 ≥ 4.5）</h2><span class="sec-desc">6 家高潜企业：2 家耳机自营头部 + 2 家全球化标杆 + 2 家穿戴/代工龙头</span></div>
+    <div class="top-grid" id="topGrid"></div>
+    <div class="tier" style="margin-top:16px;border-left-color:#2A8FAC">
+      <div class="t-head"><span class="t-no" style="background:#2A8FAC">4.0</span><span class="t-name">主力层 · 20 家</span><span class="t-count">按角色分组概览（完整名单见 04 清单）</span></div>
+      <p>该层是合作方案的「执行主力带」：头部 TP 与分销龙头承接电商操盘，ODM 大厂承接产品代工，成熟品牌承接联合运营。</p>
+      <div class="members">
+        <span class="member hot">TP 代运营 ×5：宝尊电商、杭州碧橙、壹网壹创、青木科技、若羽臣</span>
+        <span class="member hot">渠道分销 ×2：天音通信、爱施德</span>
+        <span class="member hot">成熟品牌 ×5：漫步者、韶音、乐心、出门问问、追觅</span>
+        <span class="member hot">ODM 大厂 ×8：立讯精密、奋达、华勤、佳禾、迪芬尼、国光、三诺、闻泰</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 03 分层合作建议 ===== -->
+  <section id="tiers">
+    <div class="sec-head"><span class="sec-no">03</span><h2 class="sec-title">分层合作建议</h2><span class="sec-desc">基于评分与可合作原因归纳的四层配置，供选型参考</span></div>
+    <div class="tier t1">
+      <div class="t-head"><span class="t-no">T1</span><span class="t-name">战略核心层</span><span class="t-count">6 家 · 评分 ≥ 4.5</span></div>
+      <p>声学根基深、全链路自持或全球运营标杆：优先推进联合操盘 / 双品牌联名 / 高端线代工等深度合作，先谈排他与资源投入。</p>
+      <div class="members"><span class="member hot">万魔 1MORE</span><span class="member hot">倍思 Baseus</span><span class="member hot">绿联 UGREEN</span><span class="member hot">安克 Anker/声阔</span><span class="member hot">歌尔 GoerTek</span><span class="member hot">华米 Zepp</span></div>
+    </div>
+    <div class="tier t2">
+      <div class="t-head"><span class="t-no">T2</span><span class="t-name">主力运营层</span><span class="t-count">20 家 · 评分 4.0</span></div>
+      <p>按需求角色配对：电商操盘选头部 TP（宝尊、壹网壹创、青木、若羽臣等），渠道铺货选分销龙头（天音、爱施德），代工选 ODM 大厂（立讯、华勤、迪芬尼等），联合运营选成熟品牌（漫步者、韶音、乐心等）。</p>
+      <div class="members"><span class="member">宝尊电商</span><span class="member">杭州碧橙</span><span class="member">壹网壹创</span><span class="member">青木科技</span><span class="member">若羽臣</span><span class="member">天音通信</span><span class="member">爱施德</span><span class="member">漫步者</span><span class="member">韶音 Shokz</span><span class="member">乐心</span><span class="member">出门问问</span><span class="member">追觅</span><span class="member">立讯精密</span><span class="member">奋达</span><span class="member">华勤技术</span><span class="member">佳禾智能</span><span class="member">迪芬尼</span><span class="member">国光电器</span><span class="member">三诺电子</span><span class="member">闻泰科技</span></div>
+    </div>
+    <div class="tier t3">
+      <div class="t-head"><span class="t-no">T3</span><span class="t-name">补充 / 出海 / 细分层</span><span class="t-count">53 家 · 评分 3.5</span></div>
+      <p>最大蓄水池：长尾 TP 与智慧零售（火蝠、数聚智连、乐其、网营、凯淳、微盟、百秋）补模块化运营；出海与供应链代理（钛动、通拓、怡亚通、优趣汇）承接跨境与渠道下沉；细分品牌（南卡、SoundPeats、SANAG、水月雨、Keep、小天才等）补充价格带与人群空白。</p>
+      <div class="members"><span class="member">火蝠电商</span><span class="member">数聚智连</span><span class="member">上海乐其</span><span class="member">杭州网营</span><span class="member">凯淳实业</span><span class="member">微盟</span><span class="member">钛动科技</span><span class="member">通拓科技</span><span class="member">怡亚通</span><span class="member">优趣汇</span><span class="member">百秋尚美</span><span class="member">南卡 NANK</span><span class="member">SoundPeats</span><span class="member">SANAG</span><span class="member">水月雨</span><span class="member">Keep</span><span class="member">小天才</span><span class="member">索爱 Soaiy</span><span class="member">达尔优</span><span class="member">Aukey</span><span class="member">映趣</span><span class="member">读书郎</span><span class="member">宜准 EZON</span></div>
+    </div>
+    <div class="tier t4">
+      <div class="t-head"><span class="t-no">T4</span><span class="t-name">观察 / 长尾层</span><span class="t-count">19 家 · 评分 3.0</span></div>
+      <p>中小品牌与代工厂：合作门槛低、打法灵活，适合小批量试水、低价走量或临时产能补充；建议保持观察清单，不投入主要资源。</p>
+      <div class="members"><span class="member">击音 iGene</span><span class="member">兴戈 SIMGOT</span><span class="member">英菲克</span><span class="member">卫小宝</span><span class="member">阿巴町</span><span class="member">糖猫 TAMO</span><span class="member">咕咚</span><span class="member">iWOWN</span><span class="member">台电 Teclast</span><span class="member">完美日记</span><span class="member">元气森林</span><span class="member">金威澎</span><span class="member">天珑移动</span><span class="member">中诺通讯</span><span class="member">卓翼科技</span><span class="member">麦博</span><span class="member">朗琴</span><span class="member">联创集团</span><span class="member">金正</span></div>
+    </div>
+  </section>
+
+  <!-- ===== 04 全部候选清单 ===== -->
+  <section id="list">
+    <div class="sec-head"><span class="sec-no">04</span><h2 class="sec-title">全部候选清单（98 家）</h2><span class="sec-desc">支持按类别 / 评分筛选与关键词搜索；点击行展开经验与可合作原因</span></div>
+    <div class="controls">
+      <input id="q" type="text" placeholder="搜索公司名称 / 品牌关键词…" oninput="renderTable()">
+      <select id="fCat" onchange="renderTable()">
+        <option value="">全部类别</option>
+      </select>
+      <select id="fScore" onchange="renderTable()">
+        <option value="">全部评分</option>
+        <option value="5">5.0</option>
+        <option value="4.5">≥ 4.5</option>
+        <option value="4">≥ 4.0</option>
+        <option value="3.5">≥ 3.5</option>
+        <option value="3">≥ 3.0</option>
+      </select>
+      <button class="btn" onclick="resetFilters()">重置</button>
+    </div>
+    <div class="tbl-wrap">
+      <div class="tbl-scroll">
+        <table>
+          <colgroup><col class="c1"><col class="c2"><col class="c3"><col class="c4"><col class="c5"><col class="c6"><col class="c7"></colgroup>
+          <thead>
+            <tr><th>公司名称</th><th>类别</th><th>总部</th><th>运营模式</th><th>评分</th><th>耳机经验</th><th>穿戴经验</th></tr>
+          </thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+      <div class="countline" id="countline"></div>
+      <div class="scroll-hint">← 窄屏左右滑动查看完整表格 →</div>
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== Footer ===== -->
+<footer class="footer">
+  <div class="container">
+    <div class="note">耳机与穿戴品类 · 国内电商代理服务商候选调研报告 — 2026-09-15</div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+<script>
+var REPORT_DATA = {"meta":{"file":"耳机穿戴_国内电商代理服务商候选清单.xlsx","generated":"2026-09-15","total":98,"avg_score":3.577,"sheet_counts":{"A-耳机类":35,"B-穿戴类":22,"C-其他品类小品牌":20,"D-其他品类贴牌公司":21,"代理商汇总":18,"全部-按评分排序":98}},"score_dist":{"5.0":2,"4.5":4,"4.0":20,"3.5":53,"3.0":19},"cat_dist":{"耳机品类头部（品牌商 / 代理商）":35,"穿戴品类头部（品牌商 / 代理商 / 代工厂）":22,"其他品类头部贴牌公司（ODM / 白牌）":21,"其他品类头部小品牌公司":20},"mode_dist":{"品牌自营+贴牌/ODM":38,"品牌自营":21,"贴牌（ODM/EMS）":21,"代理（TP/分销/出海）":18},"reg_dist":{"广东":71,"山东":1,"北京":7,"上海":9,"浙江":5,"江苏":2,"湖北":1,"四川":2},"cat_exp":{"耳机品类头部（品牌商 / 代理商）":{"ear":35,"wear":2,"n":35},"穿戴品类头部（品牌商 / 代理商 / 代工厂）":{"ear":6,"wear":21,"n":22},"其他品类头部贴牌公司（ODM / 白牌）":{"ear":16,"wear":2,"n":21},"其他品类头部小品牌公司":{"ear":1,"wear":0,"n":20}},"top":[{"cat":"耳机品类头部（品牌商 / 代理商）","name":"万魔声学股份有限公司（1MORE）","hq":"广东·深圳","ear":"有：TWS / 头戴 / 降噪耳机全线","wear":"部分：以耳机为主，穿戴协同有限","mode":"品牌自营 + 贴牌代工","reasons":"1) 声学技术、专利与调音积累深，耳机是本命品类；2) 小米生态链背景，量产与品控体系成熟；3) 研发-品牌-电商全链路自持，可承接代运营或联合操盘；4) 有与头部品牌联合开发经验，配合度高。","score":5.0},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"深圳市倍思科技有限公司（Baseus）","hq":"广东·深圳","ear":"有：TWS / 头戴 / 开放式耳机","wear":"有：智能手表 / 手环及穿戴配件","mode":"品牌自营 + 贴牌","reasons":"1) 3C 数码多品类电商运营能力极强；2) 天猫/京东/抖音 + 跨境全渠道覆盖；3) 产品迭代快、供应链响应快；4) 达人分销与内容投放体系成熟，可快速起量。","score":5.0},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"深圳市绿联科技股份有限公司（UGREEN）","hq":"广东·深圳","ear":"有：音频线材 / TWS 耳机","wear":"部分：穿戴周边 / 智能配件","mode":"品牌自营","reasons":"1) A 股上市，运营与合规体系规范，资质齐全；2) 品牌溢价与复购能力强；3) 线上线下全渠道，海外同步；4) 品质与售后体系完善，适合承接中高端产品线。","score":4.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"安克创新科技股份有限公司（Anker / Soundcore 声阔）","hq":"湖南·长沙（深圳设运营中心）","ear":"有：Soundcore 声阔耳机系列","wear":"有：eufy 可穿戴 / 智能硬件","mode":"品牌自营","reasons":"1) 多品牌矩阵与全球化运营经验；2) 研发投入与专利储备充足；3) 数据化电商运营能力行业顶尖；4) 具备从 0 到 1 打造子品牌的方法论。","score":4.5},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"歌尔股份有限公司（GoerTek）","hq":"山东·潍坊","ear":"有：TWS 耳机 ODM 全球龙头","wear":"有：智能穿戴 ODM","mode":"贴牌（ODM / JDM）","reasons":"1) 全球顶级声学 + 穿戴 ODM，良率与规模领先；2) 服务国际大牌，质量体系过硬；3) 研发与精密制造能力强；4) 可承接耳机 + 穿戴双线代工。","score":4.5},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"华米信息科技（Zepp Health / Amazfit）","hq":"安徽·合肥（北京办公）","ear":"部分：以穿戴为主，音频非核心","wear":"有：智能手表 / 手环，全球出货靠前","mode":"品牌自营","reasons":"1) 穿戴软硬件 + 健康算法积累深；2) 全球化品牌运营经验；3) 供应链与量产能力强；4) 健康数据能力可做差异化。","score":4.5}],"tier2_count":20,"records":[{"cat":"耳机品类头部（品牌商 / 代理商）","name":"万魔声学股份有限公司（1MORE）","hq":"广东·深圳","ear":"有：TWS / 头戴 / 降噪耳机全线","wear":"部分：以耳机为主，穿戴协同有限","mode":"品牌自营 + 贴牌代工","reasons":"1) 声学技术、专利与调音积累深，耳机是本命品类；2) 小米生态链背景，量产与品控体系成熟；3) 研发-品牌-电商全链路自持，可承接代运营或联合操盘；4) 有与头部品牌联合开发经验，配合度高。","score":5.0},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"深圳市倍思科技有限公司（Baseus）","hq":"广东·深圳","ear":"有：TWS / 头戴 / 开放式耳机","wear":"有：智能手表 / 手环及穿戴配件","mode":"品牌自营 + 贴牌","reasons":"1) 3C 数码多品类电商运营能力极强；2) 天猫/京东/抖音 + 跨境全渠道覆盖；3) 产品迭代快、供应链响应快；4) 达人分销与内容投放体系成熟，可快速起量。","score":5.0},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"深圳市绿联科技股份有限公司（UGREEN）","hq":"广东·深圳","ear":"有：音频线材 / TWS 耳机","wear":"部分：穿戴周边 / 智能配件","mode":"品牌自营","reasons":"1) A 股上市，运营与合规体系规范，资质齐全；2) 品牌溢价与复购能力强；3) 线上线下全渠道，海外同步；4) 品质与售后体系完善，适合承接中高端产品线。","score":4.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"安克创新科技股份有限公司（Anker / Soundcore 声阔）","hq":"湖南·长沙（深圳设运营中心）","ear":"有：Soundcore 声阔耳机系列","wear":"有：eufy 可穿戴 / 智能硬件","mode":"品牌自营","reasons":"1) 多品牌矩阵与全球化运营经验；2) 研发投入与专利储备充足；3) 数据化电商运营能力行业顶尖；4) 具备从 0 到 1 打造子品牌的方法论。","score":4.5},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"歌尔股份有限公司（GoerTek）","hq":"山东·潍坊","ear":"有：TWS 耳机 ODM 全球龙头","wear":"有：智能穿戴 ODM","mode":"贴牌（ODM / JDM）","reasons":"1) 全球顶级声学 + 穿戴 ODM，良率与规模领先；2) 服务国际大牌，质量体系过硬；3) 研发与精密制造能力强；4) 可承接耳机 + 穿戴双线代工。","score":4.5},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"华米信息科技（Zepp Health / Amazfit）","hq":"安徽·合肥（北京办公）","ear":"部分：以穿戴为主，音频非核心","wear":"有：智能手表 / 手环，全球出货靠前","mode":"品牌自营","reasons":"1) 穿戴软硬件 + 健康算法积累深；2) 全球化品牌运营经验；3) 供应链与量产能力强；4) 健康数据能力可做差异化。","score":4.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"宝尊电商（Baozun Inc.）","hq":"上海","ear":"有：消费电子 / 3C 品牌代运营项目","wear":"部分：数码可穿戴类目经验","mode":"代理（TP 代运营）","reasons":"1) 国内头部 TP，全渠道运营中台成熟；2) 大品牌服务经验与资金实力；3) IT/数据中台能力可复用至 3C；4) 团队规模大，可承接大促峰值。","score":4.0},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"杭州碧橙数字技术股份有限公司","hq":"浙江·杭州","ear":"有：3C 家电 / 数码品牌代运营","wear":"部分：可穿戴 / 智能硬件","mode":"代理（TP 代运营）","reasons":"1) 3C 家电类目运营专精，与硬件品牌匹配度高；2) 数据化运营 + 内容团队完整；3) 有品牌孵化与新品打爆经验；4) 直播电商承接能力较强。","score":4.0},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"深圳市漫步者科技股份有限公司（Edifier）","hq":"广东·深圳","ear":"有：耳机 + 音箱，国内市占领先","wear":"无","mode":"品牌自营 + 自有工厂代工","reasons":"1) 国内音频品牌龙头，心智认知强；2) 自有工厂与品控；3) 电商大促与新品发布运营经验丰富；4) 渠道分销网络成熟。","score":4.0},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"深圳市韶音科技有限公司（Shokz）","hq":"广东·深圳","ear":"有：骨传导 / 开放式耳机","wear":"无","mode":"品牌自营","reasons":"1) 细分赛道龙头，高端定位清晰；2) 内容营销与运动场景运营能力强；3) 国内 + 海外双市场操盘经验；4) 品牌调性与 TCL 中高端线契合。","score":4.0},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"杭州壹网壹创科技股份有限公司","hq":"浙江·杭州","ear":"有：消费电子/3C 品牌代运营","wear":"部分：智能硬件","mode":"代理（TP 代运营）","reasons":"1) 上市 TP，代运营体系与合规资质完善，便于签署正式代理协议；2) 消费电子类目有成熟操盘案例，团队成建制；3) 内容+直播+店铺运营全链路齐备；4) 有新品打爆方法论，适合 TCL 新线冷启动。","score":4.0},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"广州青木信息科技有限公司（青木科技）","hq":"广东·广州","ear":"有：3C/家电/消费电子多类目代运营","wear":"部分：可穿戴智能硬件","mode":"代理（TP 代运营）","reasons":"1) 头部 TP，多平台运营中台成熟，可一店多平台统一管理；2) 数据化选品与投放能力强；3) 双 11/618 峰值承接经验足；4) 可与 TCL 现有渠道形成互补而非冲突。","score":4.0},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"广州若羽臣科技股份有限公司","hq":"广东·广州","ear":"有：3C/数码类目代运营（含音频配件）","wear":"部分：智能硬件","mode":"代理（TP 代运营）","reasons":"1) 上市公司，代运营与品牌管理双能力，资质合规；2) 多类目操盘经验，团队成建制、可快速组队；3) 擅长品牌定位重塑与新品打爆；4) 中小品牌陪跑案例多，服务意愿强。","score":4.0},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"广东乐心医疗电子股份有限公司（Lifesense）","hq":"广东·中山","ear":"无","wear":"有：智能手环 / 手表 + 健康监测","mode":"品牌自营 + 贴牌","reasons":"1) 医疗级健康监测技术壁垒；2) 自有品牌 + ODM 双轮；3) 上市资质合规；4) 适合健康向穿戴产品。","score":4.0},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"深圳市奋达科技股份有限公司（Fenda）","hq":"广东·深圳","ear":"有：TWS / 音频产品","wear":"有：智能穿戴","mode":"贴牌（ODM）+ 自有品牌","reasons":"1) 音频 + 穿戴双 ODM，品类协同好；2) 成本与交付优势；3) 上市公司资质；4) 可一站式承接两条产品线。","score":4.0},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"立讯精密工业股份有限公司（Luxshare）","hq":"广东·东莞","ear":"有：TWS 耳机代工","wear":"有：智能手表代工","mode":"贴牌（ODM / EMS）","reasons":"1) 顶级代工体系，规模与良率领先；2) 垂直整合降低成本；3) 消费电子客户资源广；4) 交付稳定性强。","score":4.0},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"天音通信控股股份有限公司","hq":"广东·深圳","ear":"有：3C 数码（含音频/耳机配件）分销代理","wear":"部分：智能穿戴分销","mode":"代理（3C 渠道分销代理）","reasons":"1) 上市分销龙头，长期代理国际主流数码品牌，代理资质与合规体系完备；2) 运营商与线下门店资源深厚，可做耳机/穿戴渠道下沉；3) 全国物流与售后网络覆盖；4) 具备线上线下融合运营能力。","score":4.0},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"深圳市爱施德股份有限公司","hq":"广东·深圳","ear":"有：3C 数码（含耳机/音频配件）渠道代理与分销","wear":"部分：智能穿戴分销","mode":"代理（3C 渠道分销代理）","reasons":"1) 国内 3C 分销龙头之一，上市公司，资金与渠道实力强，可承接 TCL 耳机线全国铺货；2) 线上线下与运营商渠道覆盖完整，分销网络成熟；3) 与主流 3C/手机品牌有长期代理合作经验，代理体系规范；4) 供应链与账期能力强，适合走量产品快速起盘。","score":4.0},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"出门问问信息科技有限公司（Mobvoi / TicWatch）","hq":"北京","ear":"部分：语音交互技术可迁移至音频","wear":"有：智能手表 + 耳机双线（TicWatch）","mode":"品牌自营","reasons":"1) AI 语音与可穿戴 OS 积累深；2) 手表+耳机双线经验，与 TCL 需求高度重合；3) 软件生态与健康算法能力可做差异化；4) 体量中小，具备品牌与 ODM 双模式协作经验。","score":4.0},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"华勤技术股份有限公司","hq":"上海","ear":"部分：音频非主业","wear":"有：智能穿戴 ODM","mode":"贴牌（ODM）","reasons":"1) 大型 ODM，研发与规模优势；2) 多品类协同；3) 客户资源丰富；4) 交付体系成熟。","score":4.0},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"佳禾智能科技股份有限公司","hq":"广东·东莞","ear":"有：TWS 耳机 ODM","wear":"有：可穿戴 / AR 眼镜","mode":"贴牌（ODM）","reasons":"1) 声学 ODM 经验丰富；2) 客户资源广；3) 柔性制造能力强；4) 擅长中小批量快反。","score":4.0},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"惠州市迪芬尼声学科技股份有限公司（Tymphany）","hq":"广东·惠州","ear":"有：扬声器 / 耳机 / 音箱 ODM","wear":"部分","mode":"贴牌（ODM）","reasons":"1) 全球知名声学 ODM，技术与国际客户资源顶尖；2) 扬声器单元自研自产；3) 品质体系国际认证齐全；4) 适合 TCL 高端产品线代工。","score":4.0},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"国光电器股份有限公司（GGEC）","hq":"广东·广州","ear":"有：扬声器 / 耳机 ODM","wear":"部分","mode":"贴牌（ODM）","reasons":"1) 老牌电声 ODM，声学技术积累深；2) 客户资源优质；3) 规模化交付；4) 上市合规。","score":4.0},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"深圳市三诺电子有限公司（3NOD）","hq":"广东·深圳","ear":"有：音频 / 耳机 ODM","wear":"部分","mode":"贴牌（ODM / JDM）","reasons":"1) 音频 ODM 老牌厂商；2) 客户覆盖广；3) 成本与交付优势；4) 可承接整机贴牌。","score":4.0},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"闻泰科技股份有限公司（Wingtech）","hq":"浙江·嘉兴","ear":"部分：音频非主业","wear":"有：智能穿戴 / 终端 ODM 规模大","mode":"贴牌（ODM / EMS）","reasons":"1) 全球领先 ODM，规模与研发投入大；2) 供应链垂直整合；3) 客户结构优质；4) 可承接大批量交付。","score":4.0},{"cat":"其他品类头部小品牌公司","name":"追觅科技（苏州）有限公司","hq":"江苏·苏州","ear":"部分：可迁移的高速电机/算法","wear":"部分：可迁移","mode":"品牌自营","reasons":"1) 高速电机与算法技术可迁移至音频/穿戴；2) 多品类扩张方法论成熟；3) 电商运营与直播能力强；4) 增长曲线陡、合作意愿高。","score":4.0},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"深圳市梦趣科技有限公司（NANK 南卡）","hq":"广东·深圳","ear":"有：TWS / 骨传导 / 开放式耳机","wear":"无","mode":"品牌自营（贴牌生产）","reasons":"1) 新兴音频品牌，线上销售起量快、内容种草与达人分销打法成熟；2) 在开放式/骨传导细分有技术与口碑积累，销售表现强；3) 上新节奏快、供应链反应灵活；4) 体量小，合作门槛与排期友好，可从补充线切入。","score":3.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"上海钛动科技股份有限公司（Tec-do）","hq":"上海","ear":"有：3C/消费电子（含音频）出海代运营与营销","wear":"部分：可穿戴","mode":"代理（出海代运营 / 营销代理）","reasons":"1) 3C 出海代运营头部，服务多家音频/硬件品牌；2) 海外投放与本地化运营能力强；3) 数据与素材中台成熟；4) 可承接 TCL 耳机线海外增长代理。","score":3.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"深圳市怡亚通供应链股份有限公司","hq":"广东·深圳","ear":"有：3C 数码（含耳机）供应链与分销代理","wear":"部分：智能穿戴","mode":"代理（供应链 / 分销代理）","reasons":"1) 上市供应链龙头，分销与仓配网络全国覆盖，可承接耳机/穿戴渠道代理；2) 资金与账期支持能力强；3) 多渠道整合（商超/3C 连锁/电商）经验丰富；4) 适合 TCL 走量产品线的渠道铺设。","score":3.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"深圳市雷柏科技股份有限公司（Rapoo）","hq":"广东·深圳","ear":"有：无线 / 游戏耳机 + 外设","wear":"无","mode":"品牌自营","reasons":"1) 上市公司，治理规范；2) 外设品牌沉淀，电竞人群运营成熟；3) 渠道覆盖广；4) 音频产品线有延伸空间。","score":3.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"深圳市通拓科技有限公司","hq":"广东·深圳","ear":"有：3C 数码（含耳机/音频）跨境代运营与分销","wear":"部分：智能穿戴","mode":"代理（跨境代运营 / 分销）","reasons":"1) 跨境 3C 代运营经验丰富，多平台店铺矩阵成熟，可承接 TCL 耳机/穿戴出海代理；2) 海外仓与物流体系完善；3) 品类运营团队规模化；4) 国内外双线操盘经验可复用。","score":3.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"广东品胜电子股份有限公司（PISEN）","hq":"广东·深圳","ear":"有：音频 / 耳机 / 3C 配件","wear":"部分：穿戴配件","mode":"品牌自营 + 贴牌","reasons":"1) 3C 配件渠道与分销网络广；2) 性价比供应链能力强；3) 线上线下一体化；4) 可覆盖入门至中端价格带。","score":3.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"武汉火蝠电子商务有限公司","hq":"湖北·武汉","ear":"有：家电 3C 类目代运营","wear":"部分","mode":"代理（TP 代运营）","reasons":"1) 家电 3C 运营团队成熟；2) 客服 / 内容 / 直播一体化；3) 人力成本结构优；4) 中小品牌陪跑经验足。","score":3.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"深圳市海威特科技股份有限公司（Havit）","hq":"广东·深圳","ear":"有：耳机 / 音箱 / 3C","wear":"部分：穿戴类","mode":"品牌自营 + 贴牌","reasons":"1) 音频 ODM + 品牌双能力；2) 成本与交付优势明显；3) 跨境电商经验丰富；4) 适合性价比产品线。","score":3.5},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"广州惠威电声科技股份有限公司（HiVi）","hq":"广东·广州","ear":"有：扬声器 / 耳机 / 音箱","wear":"部分","mode":"品牌自营 + 贴牌","reasons":"1) 老牌电声企业，声学技术积累深；2) 高端音频口碑好、销售表现稳；3) 自有产能与品控；4) 可承接高品质代工。","score":3.5},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"深圳市亿道信息股份有限公司（Emdoor）","hq":"广东·深圳","ear":"部分","wear":"有：智能穿戴 / 三防终端 ODM","mode":"贴牌（ODM）","reasons":"1) 智能终端 ODM 经验丰富；2) 研发与快速打样能力强；3) 海外客户资源多、订单稳定；4) 上市资质合规。","score":3.5},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"深圳市易力声科技有限公司","hq":"广东·深圳","ear":"有：耳机 / 声学模组 ODM","wear":"部分","mode":"贴牌（ODM）","reasons":"1) 声学 ODM 老厂，客户覆盖广、出货稳定；2) 成本与交付稳定；3) 中小批量灵活；4) 深圳供应链近、配合快。","score":3.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"东莞市达尔优电子科技有限公司（Dareu）","hq":"广东·东莞","ear":"有：游戏 / 无线耳机 + 外设","wear":"无","mode":"品牌自营（含贴牌代工）","reasons":"1) 电竞外设品牌沉淀，电竞人群运营成熟、销售稳定；2) 自有工厂与品控体系；3) 电商渠道覆盖广；4) 可延伸至电竞耳机产品线。","score":3.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"深圳市索爱科技有限公司（Soaiy）","hq":"广东·深圳","ear":"有：TWS / 头戴耳机","wear":"部分：可穿戴音箱类","mode":"品牌自营（含贴牌代工）","reasons":"1) 音频老牌厂商，量产与成本控制成熟，走量能力强；2) 线上渠道运营经验久；3) 产品线全、价格带宽；4) 体量适中，可承接 TCL 中低端走量产品线。","score":3.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"深圳市塞那科技有限公司（SANAG）","hq":"广东·深圳","ear":"有：TWS / 开放式耳机","wear":"部分：智能穿戴配件","mode":"品牌自营（贴牌生产）","reasons":"1) 抖音/直播渠道起量快，销售表现突出，内容打法新；2) 达人矩阵与短视频投放成熟；3) 定价灵活、上新快；4) 决策链短、配合度高，适合小体量联合运营。","score":3.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"深圳市泥炭科技有限公司（SoundPeats）","hq":"广东·深圳","ear":"有：TWS / 降噪耳机","wear":"无","mode":"品牌自营（贴牌生产）","reasons":"1) 性价比 TWS 有稳定销量与评价基础，销售表现强；2) 国内+海外双市场运营经验；3) 供应链快反、账期灵活；4) 适合补充入门价格带，体量小易谈。","score":3.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"成都水月雨科技有限公司（Moondrop 水月雨）","hq":"四川·成都","ear":"有：HIFI 入耳 / 头戴耳机","wear":"无","mode":"品牌自营（贴牌生产）","reasons":"1) HIFI 细分品牌口碑好、发烧友社区运营强，销售表现在细分内领先；2) 声学研发与调音有实质积累；3) 可补 TCL 高端听音产品线空白；4) 小体量、联合开发意愿强。","score":3.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"微盟集团（上海）","hq":"上海","ear":"有：3C/零售品牌智慧零售代运营","wear":"部分：智能穿戴私域运营","mode":"代理（智慧零售 / 代运营）","reasons":"1) 上市 SaaS + 代运营双模式，私域与会员运营能力强；2) 微信生态（视频号/小程序）运营资源丰富；3) 技术与数据能力可复用至 3C；4) 可与天猫/京东公域形成互补。","score":3.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"杭州网营科技股份有限公司","hq":"浙江·杭州","ear":"有：3C/家电类目代运营","wear":"部分","mode":"代理（TP 代运营）","reasons":"1) 淘系头部 TP，店铺运营与视觉内容团队完整；2) 直播电商承接能力强；3) 大促节奏配合经验足；4) 服务模式灵活，可按模块合作。","score":3.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"上海乐其网络科技有限公司","hq":"上海","ear":"有：3C/家电品牌代运营","wear":"部分","mode":"代理（TP 代运营）","reasons":"1) 家电 3C 代运营经验足，类目人群重合度高；2) 直播与达人资源丰富；3) 中小品牌陪跑案例多、服务颗粒度细；4) 费用结构灵活，适合试水合作。","score":3.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"北京数聚智连科技股份有限公司","hq":"北京","ear":"有：3C 及消费电子代运营","wear":"部分","mode":"代理（TP 代运营）","reasons":"1) 内容营销+效果广告整合能力强，擅长新品破圈；2) 数据驱动的品牌增长方法论；3) 服务多家硬件品牌，懂产品语言；4) 团队精干、决策与响应速度快。","score":3.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"上海凯淳实业股份有限公司","hq":"上海","ear":"有：3C/家电类目代运营","wear":"部分","mode":"代理（TP 代运营）","reasons":"1) 上市 TP，长期服务国际大牌，交付质量与服务标准高；2) 供应链、客服、仓储一体化能力强；3) 全渠道（含跨境）覆盖；4) 合规与数据安全规范，适合上市公司合作。","score":3.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"深圳市傲基科技股份有限公司（Aukey）","hq":"广东·深圳","ear":"有：音频 / 耳机 / 3C 配件","wear":"部分：智能穿戴","mode":"品牌自营 + 贴牌（跨境为主）","reasons":"1) 跨境 3C 运营能力突出，耳机类目销售表现强；2) 多品牌矩阵与供应链整合能力强；3) 上市资质合规；4) 国内+海外双线经验可复用至 TCL 出海。","score":3.5},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"广东小天才科技有限公司","hq":"广东·东莞","ear":"部分","wear":"有：儿童智能手表龙头","mode":"品牌自营","reasons":"1) 儿童穿戴龙头，品牌与渠道强；2) 细分人群运营经验；3) 供应链与品控成熟；4) 渠道下沉能力强。","score":3.5},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"天键电声股份有限公司","hq":"广东·中山","ear":"有：耳机 ODM","wear":"部分","mode":"贴牌（ODM）","reasons":"1) 电声器件到整机一体化；2) 成本优势；3) 交期稳定；4) 适合大批量基础款。","score":3.5},{"cat":"其他品类头部小品牌公司","name":"深圳市蕉内科技有限公司（Bananain）","hq":"广东·深圳","ear":"无","wear":"无","mode":"品牌自营（贴牌生产）","reasons":"1) 新消费品牌运营标杆；2) 私域与内容营销体系强；3) 品类可延伸性强；4) 用户运营精细。","score":3.5},{"cat":"其他品类头部小品牌公司","name":"广东德尔玛科技股份有限公司（Deerma）","hq":"广东·佛山","ear":"无","wear":"无","mode":"品牌自营（含代工）","reasons":"1) 小家电供应链 + 多品牌运营经验；2) 上市公司，资质齐全；3) 线上线下协同；4) 性价比产品线成熟。","score":3.5},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"北京卡路里科技有限公司（Keep）","hq":"北京","ear":"部分：运动耳机品类有布局","wear":"有：智能手环 / 手表","mode":"品牌自营（贴牌生产）","reasons":"1) 运动人群与内容社区运营标杆，穿戴销售表现强；2) 软硬件+会员生态协同；3) 线上占比高、转化能力强；4) 品牌联名与联合开发空间大。","score":3.5},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"深圳市映趣科技有限公司","hq":"广东·深圳","ear":"有：音频类配件","wear":"有：智能手表 / 穿戴 ODM + 品牌","mode":"贴牌（ODM）+ 品牌","reasons":"1) 穿戴代工与品牌双能力，耳机/穿戴可协同；2) 中小批量友好、打样快；3) 交付与成本稳定；4) 体量小、响应快。","score":3.5},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"读书郎教育科技股份有限公司","hq":"广东·中山","ear":"部分","wear":"有：儿童智能手表 / 学习硬件","mode":"品牌自营（含贴牌生产）","reasons":"1) 儿童穿戴细分销售表现稳，教育硬件渠道与用户基础厚；2) 儿童人群运营经验成熟；3) 线下渠道下沉能力强；4) 可实现硬件+内容联动。","score":3.5},{"cat":"其他品类头部小品牌公司","name":"广州星际悦动股份有限公司（usmile 笑容加）","hq":"广东·广州","ear":"无","wear":"无","mode":"品牌自营（贴牌生产）","reasons":"1) 品类冠军级运营能力；2) 细分人群运营与内容营销强；3) 品牌建设方法论可复制；4) 线上占比高、反应快。","score":3.5},{"cat":"其他品类头部小品牌公司","name":"深圳市素士科技股份有限公司（Soocas）","hq":"广东·深圳","ear":"无","wear":"无","mode":"品牌自营（贴牌生产）","reasons":"1) 个护小家电 3C 属性接近音频/穿戴；2) 小米生态链供应链经验；3) 性价比运营与内容种草成熟；4) SKU 管理精细。","score":3.5},{"cat":"其他品类头部小品牌公司","name":"北京石头世纪科技股份有限公司（Roborock）","hq":"北京","ear":"无","wear":"无","mode":"品牌自营","reasons":"1) 技术 + 品牌双驱动；2) 高端电商运营经验；3) 全球化布局；4) 品类扩展能力被验证。","score":3.5},{"cat":"其他品类头部小品牌公司","name":"添可智能科技有限公司（TINECO）","hq":"江苏·苏州","ear":"无","wear":"无","mode":"品牌自营","reasons":"1) 科沃斯体系资源支持；2) 高端品牌运营经验；3) 直播电商能力突出；4) 新品打爆方法论成熟。","score":3.5},{"cat":"其他品类头部小品牌公司","name":"深圳减字科技有限公司（蕉下 Beneunder）","hq":"广东·深圳","ear":"无","wear":"无","mode":"品牌自营（贴牌生产）","reasons":"1) 爆品定义与品类开创能力；2) 内容 + 达人矩阵成熟；3) 线上占比高；4) 供应链快反能力强。","score":3.5},{"cat":"其他品类头部小品牌公司","name":"小熊电器股份有限公司","hq":"广东·佛山","ear":"无","wear":"无","mode":"品牌自营","reasons":"1) 小家电多 SKU 运营体系成熟；2) 电商渠道深耕多年；3) 产品迭代快；4) 供应链稳定。","score":3.5},{"cat":"其他品类头部小品牌公司","name":"深圳市鹿客科技有限公司（Lockin）","hq":"广东·深圳","ear":"无","wear":"无","mode":"品牌自营（贴牌生产）","reasons":"1) 小米生态链供应链与品控经验；2) 智能硬件电商运营成熟、销售表现好；3) 品类扩张能力已被验证；4) 体量中小、协作灵活。","score":3.5},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"上海优趣汇供应链管理股份有限公司","hq":"上海","ear":"部分：3C 数码类目","wear":"有：智能穿戴 / 健康类目代运营","mode":"代理（TP 代运营 / 跨境）","reasons":"1) 上市公司，智能穿戴与健康类目代运营经验足；2) 进口与跨境品牌运营能力强，可承接出海协同；3) 会员与私域运营体系成熟；4) 合规与数据管理规范。","score":3.5},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"上海百秋尚美科技股份有限公司","hq":"上海","ear":"部分：3C / 音频类目代运营","wear":"有：智能穿戴类目代运营","mode":"代理（TP 代运营）","reasons":"1) 高端品牌代运营能力强，运营标准高，契合 TCL 中高端穿戴定位；2) 视觉与内容制作水平行业领先；3) 全渠道整合（天猫/京东/抖音/小程序）；4) 服务口碑稳定、续约率高。","score":3.5},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"深圳市宜准电子科技有限公司（EZON）","hq":"广东·深圳","ear":"无","wear":"有：运动智能手表 / 心率带","mode":"品牌自营 + 贴牌","reasons":"1) 运动穿戴细分深耕多年，细分内销售表现好；2) 心率/运动算法有积累；3) 出口与 ODM 并行；4) 体量小、合作方式灵活。","score":3.5},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"上海龙旗科技股份有限公司","hq":"上海","ear":"部分","wear":"有：智能穿戴 ODM","mode":"贴牌（ODM）","reasons":"1) ODM 大厂规模；2) 智能硬件研发能力；3) 供应链整合强；4) 多元客户结构。","score":3.5},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"广东朝阳电子科技股份有限公司（朝阳科技）","hq":"广东·东莞","ear":"有：电声 ODM","wear":"部分","mode":"贴牌（ODM）","reasons":"1) 电声器件 + 整机一体；2) 成本优势；3) 交期稳定；4) 中小批量友好。","score":3.5},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"深圳市奥尼电子股份有限公司（Aoni）","hq":"广东·深圳","ear":"有：音频 / 耳机 ODM","wear":"部分：摄像头 / 智能硬件","mode":"贴牌（ODM）","reasons":"1) 上市 ODM，治理规范；2) 音频 + 视频能力；3) 供应链完整；4) 可多元定制。","score":3.5},{"cat":"其他品类头部小品牌公司","name":"深圳市罗马仕科技有限公司（ROMOSS）","hq":"广东·深圳","ear":"部分：音频配件","wear":"部分：穿戴配件","mode":"品牌自营 + 贴牌","reasons":"1) 3C 配件电商运营老手，类目人群重合、销售走量强；2) 性价比供应链优势；3) 全球渠道覆盖；4) 小单快反、成本友好。","score":3.5},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"深圳市冠旭电子股份有限公司（233621）","hq":"广东·深圳","ear":"有：降噪音频 / 耳机","wear":"部分","mode":"贴牌（ODM）+ 品牌","reasons":"1) 主动降噪技术积累；2) ODM 与品牌双能力；3) 方案定制灵活；4) 深圳供应链近。","score":3.5},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"深圳市三德大康电子有限公司","hq":"广东·深圳","ear":"有：蓝牙耳机 / 音箱 ODM","wear":"部分","mode":"贴牌（ODM）","reasons":"1) 音频 ODM 经验足，客户覆盖国内外；2) 成本优势；3) 快反能力强；4) 中小批量友好。","score":3.5},{"cat":"其他品类头部小品牌公司","name":"深圳市云米电器科技有限公司（VIOMI）","hq":"广东·佛山","ear":"无","wear":"部分：智能穿戴 / 健康硬件","mode":"品牌自营（含代工）","reasons":"1) 全屋智能生态与 IoT 平台经验；2) 上市资质规范；3) 线上线下全渠道运营、销售规模可观；4) 品类扩张与代工资源丰富。","score":3.5},{"cat":"其他品类头部小品牌公司","name":"云鲸智能科技（东莞）有限公司","hq":"广东·东莞","ear":"无","wear":"无","mode":"品牌自营","reasons":"1) 产品创新与口碑驱动；2) 线上直营运营成熟；3) 用户口碑管理好；4) 品牌溢价能力。","score":3.5},{"cat":"其他品类头部小品牌公司","name":"深圳市拓竹科技有限公司（Bambu Lab）","hq":"广东·深圳","ear":"无","wear":"无","mode":"品牌自营（贴牌生产）","reasons":"1) 硬件+软件+社区生态打法强，线上销售表现突出；2) 全球线上直营能力强；3) 高客单产品转化能力已被验证；4) 具备品类开创与高端定位方法论，可迁移至 3C。","score":3.5},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"瀛通通讯股份有限公司","hq":"广东·东莞","ear":"有：声学线材 / 耳机 ODM","wear":"部分","mode":"贴牌（ODM）","reasons":"1) 声学产业链垂直整合；2) 上市公司资质；3) 品控体系完善；4) 客户稳定。","score":3.5},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"深圳市豪恩声学股份有限公司","hq":"广东·深圳","ear":"有：微型扬声器 / 耳机模组","wear":"部分","mode":"贴牌（ODM）","reasons":"1) 声学器件 + 模组；2) 精密制造能力；3) 交付稳定；4) 成本可控。","score":3.5},{"cat":"其他品类头部小品牌公司","name":"深圳市绿米联创科技有限公司（Aqara）","hq":"广东·深圳","ear":"无","wear":"部分：智能穿戴周边生态","mode":"品牌自营（贴牌生产）","reasons":"1) IoT 生态与 Apple/小米生态整合能力强；2) 智能家居渠道资源可复用至 3C；3) 品牌与产品设计能力佳、销售表现稳；4) 可探讨生态型联合产品。","score":3.5},{"cat":"其他品类头部小品牌公司","name":"杭州萤石网络股份有限公司（EZVIZ）","hq":"浙江·杭州","ear":"无","wear":"部分：可穿戴摄像头 / 智能硬件","mode":"品牌自营（含代工）","reasons":"1) 海康体系研发与供应链支持；2) 智能硬件电商与海外运营成熟、销售表现强；3) 上市资质合规；4) 品类拓展能力强。","score":3.5},{"cat":"其他品类头部小品牌公司","name":"深圳市创想三维科技股份有限公司（Creality）","hq":"广东·深圳","ear":"无","wear":"无","mode":"品牌自营（含代工）","reasons":"1) 3C 智能硬件电商运营成熟，销售表现强；2) 海外市场份额高、跨境经验足；3) 供应链与成本优势明显；4) 资质规范化程度高。","score":3.5},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"深圳市英菲克电子有限公司（inphic）","hq":"广东·深圳","ear":"有：耳机 / 鼠标 / 3C 外设","wear":"部分","mode":"品牌自营 + 贴牌","reasons":"1) 3C 外设多品类运营经验，线上走量能力强；2) 性价比供应链优势明显；3) 线上分销网络广；4) 小批量可接、打样快。","score":3.0},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"深圳市击音科技有限公司（iGene）","hq":"广东·深圳","ear":"有：TWS / 降噪耳机","wear":"无","mode":"品牌自营","reasons":"1) 线上爆款打造经验；2) 定价与内容营销灵活；3) 决策链短、配合度高；4) 适合作为中低价位补充线。","score":3.0},{"cat":"耳机品类头部（品牌商 / 代理商）","name":"深圳市兴戈科技有限公司（SIMGOT）","hq":"广东·深圳","ear":"有：HIFI 入耳 / 无线耳机","wear":"无","mode":"品牌自营（贴牌生产）","reasons":"1) HIFI 声学技术积累，海外 HIFI 市场有份额、销售表现好；2) 出海路径清晰；3) 产品迭代快；4) 中小体量、合作灵活。","score":3.0},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"深圳市阿巴町科技有限公司","hq":"广东·深圳","ear":"无","wear":"有：儿童智能手表","mode":"品牌自营 + 贴牌","reasons":"1) 儿童手表 ODM 与品牌双轨并行，走量能力强；2) 运营商与线下渠道资源；3) 成本可控；4) 小单快反友好。","score":3.0},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"深圳市卫小宝科技有限公司","hq":"广东·深圳","ear":"无","wear":"有：儿童智能手表","mode":"品牌自营 + 贴牌","reasons":"1) 儿童穿戴细分经验足，线上销售稳定；2) 供应链与成本优势；3) 教育与安全场景内容资源；4) 中小体量、可深度定制。","score":3.0},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"北京搜狗科技发展有限公司（糖猫 TAMO）","hq":"北京","ear":"无","wear":"有：儿童智能手表（糖猫）","mode":"品牌自营（贴牌生产）","reasons":"1) 语音与 AI 技术可迁移至穿戴交互；2) 儿童穿戴产品运营经验；3) 品牌与流量资源可复用；4) 体量适中，可探索 AI 穿戴联合开发。","score":3.0},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"成都乐动信息技术有限公司（咕咚）","hq":"四川·成都","ear":"部分","wear":"有：智能运动手表 / 穿戴","mode":"品牌自营","reasons":"1) 运动人群与社区运营能力强；2) 软硬件结合；3) 内容与赛事资源；4) 适合运动向穿戴。","score":3.0},{"cat":"穿戴品类头部（品牌商 / 代理商 / 代工厂）","name":"深圳市埃微信息技术有限公司（iWOWN）","hq":"广东·深圳","ear":"无","wear":"有：智能手环 / 手表","mode":"品牌自营 + 贴牌","reasons":"1) 穿戴细分经验足；2) 出海与 ODM 并行；3) 决策灵活；4) 性价比方案能力强。","score":3.0},{"cat":"其他品类头部小品牌公司","name":"深圳市台电实业有限公司（Teclast）","hq":"广东·深圳","ear":"有：音频播放器 / 耳机","wear":"部分：平板 / 穿戴","mode":"品牌自营 + 贴牌","reasons":"1) 数码老品牌，渠道与分销沉淀深、销售稳定；2) 自有制造与成本控制能力；3) 出口经验丰富；4) 可承接走量产品线。","score":3.0},{"cat":"其他品类头部小品牌公司","name":"广州逸仙电子商务有限公司（完美日记）","hq":"广东·广州","ear":"无","wear":"无","mode":"品牌自营（代工生产）","reasons":"1) DTC 与私域运营标杆；2) 达人矩阵与内容投放强；3) 数据驱动选品；4) 品牌孵化经验。","score":3.0},{"cat":"其他品类头部小品牌公司","name":"元气森林（北京元气森林食品科技集团）","hq":"北京","ear":"无","wear":"无","mode":"品牌自营（代工生产）","reasons":"1) 渠道与终端运营能力强；2) 品牌营销与内容矩阵成熟；3) 组织与人才密度高；4) 新品类孵化能力。","score":3.0},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"深圳市金威澎电子有限公司（JW 金威澎）","hq":"广东·深圳","ear":"有：音频 / 移动电源 / 3C","wear":"部分","mode":"贴牌（ODM）+ 品牌","reasons":"1) 3C 多品类贴牌经验；2) 成本与快反；3) 出口渠道；4) 小单可接。","score":3.0},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"深圳市天珑移动技术有限公司","hq":"广东·深圳","ear":"部分","wear":"部分","mode":"贴牌（ODM）","reasons":"1) 智能硬件 ODM 经验；2) 海外客户资源；3) 制造规模；4) 交付靠谱。","score":3.0},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"深圳市中诺通讯有限公司","hq":"广东·深圳","ear":"部分","wear":"部分","mode":"贴牌（ODM）","reasons":"1) 智能硬件 ODM 方案能力；2) 供应链整合；3) 中小批量响应；4) 成本优势。","score":3.0},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"深圳市卓翼科技股份有限公司","hq":"广东·深圳","ear":"部分","wear":"部分","mode":"贴牌（EMS / ODM）","reasons":"1) 制造服务能力完整；2) 多品类代工经验；3) 规模化交付；4) 上市公司。","score":3.0},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"深圳市麦博电器有限公司（Microlab 麦博）","hq":"广东·深圳","ear":"有：音箱 / 耳机","wear":"部分","mode":"贴牌 + 品牌","reasons":"1) 音频 ODM / 品牌双路线；2) 声学调校经验；3) 成本优势；4) 出口经验。","score":3.0},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"深圳市朗琴科技有限公司","hq":"广东·深圳","ear":"有：蓝牙音箱 / 耳机","wear":"部分","mode":"贴牌（ODM）+ 品牌","reasons":"1) 音频 ODM / 品牌双路线；2) 声学调校经验；3) 成本优势；4) 出口渠道成熟。","score":3.0},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"深圳市联创科技集团有限公司","hq":"广东·深圳","ear":"有：音箱 / 耳机 ODM","wear":"部分","mode":"贴牌（ODM）","reasons":"1) 大型制造集团，产能充足；2) 多品类代工经验；3) 成本优势明显；4) 规模化交付稳定。","score":3.0},{"cat":"其他品类头部贴牌公司（ODM / 白牌）","name":"深圳市金正科技有限公司（金正音影）","hq":"广东·深圳","ear":"有：音箱 / 耳机","wear":"部分","mode":"贴牌 + 品牌","reasons":"1) 音频产品制造经验久；2) 成本优势；3) 渠道覆盖广；4) 小单可接。","score":3.0}]};
+
+/* ---------- helpers ---------- */
+function shortName(n){
+  var m = n.match(/[（(]([^（）()]+)[）)]/);
+  return m ? n.slice(0, n.indexOf(m[0])) + ' ' + m[1] : n;
+}
+function badgeCls(s){
+  if (s >= 4.99) return 's5';
+  if (s >= 4.5) return 's45';
+  if (s >= 3.99) return 's4';
+  if (s >= 3.49) return 's35';
+  return 's3';
+}
+function scoreBadge(s){
+  return '<span class="score-badge ' + badgeCls(s) + '"><span class="s">' + s.toFixed(1) + '</span><span class="t">分</span></span>';
+}
+
+/* ---------- 02 charts ---------- */
+function baseTooltip(){
+  return {trigger:'axis', triggerOn:'click', renderMode:'richText', confine:true};
+}
+function initCharts(){
+  var d = REPORT_DATA;
+
+  // score distribution
+  var sc = echarts.init(document.getElementById('chartScore'));
+  sc.setOption({
+    tooltip: baseTooltip(),
+    grid:{left:10,right:20,top:34,bottom:8,containLabel:true},
+    xAxis:{type:'category',data:Object.keys(d.score_dist),axisLabel:{fontSize:12,color:'#5B6B78'},axisTick:{show:false},axisLine:{lineStyle:{color:'#D4DCE2'}}},
+    yAxis:{type:'value',minInterval:1,axisLabel:{fontSize:11,color:'#8AA0AE'},splitLine:{lineStyle:{color:'#EFF2F5'}}},
+    series:[{type:'bar',data:Object.keys(d.score_dist).map(function(k){return d.score_dist[k];}),
+      barWidth:'52%',
+      itemStyle:{borderRadius:[6,6,0,0],color:function(p){var c=['#0F766E','#0E7490','#2A8FAC','#E8A33D','#9AA8B4'];return c[p.dataIndex];}},
+      label:{show:true,position:'top',fontSize:13,fontWeight:700,color:'#1C2B36'}
+    }]
+  });
+
+  // category donut
+  var cats = Object.keys(d.cat_dist), cvals = cats.map(function(k){return d.cat_dist[k];});
+  var cc = echarts.init(document.getElementById('chartCat'));
+  cc.setOption({
+    tooltip:{trigger:'item', triggerOn:'click', renderMode:'richText', confine:true, formatter:function(p){return p.name + '：' + p.value + ' 家（' + p.percent.toFixed(1) + '%）';}},
+    legend:{bottom:0,textStyle:{fontSize:11,color:'#5B6B78'},itemWidth:12,itemHeight:12},
+    color:['#0E7490','#0F766E','#E8A33D','#8AA0AE'],
+    series:[{type:'pie',radius:['46%','70%'],center:['50%','44%'],
+      itemStyle:{borderColor:'#fff',borderWidth:2},
+      label:{show:true,formatter:'{c}',fontSize:12,fontWeight:700,color:'#1C2B36'},
+      labelLine:{length:8,length2:8},
+      data:cats.map(function(k,i){return {name:k.replace(/（.*$/,''),value:cvals[i]};})
+    }]
+  });
+
+  // mode distribution
+  var mk = Object.keys(d.mode_dist), mv = mk.map(function(k){return d.mode_dist[k];});
+  var mc = echarts.init(document.getElementById('chartMode'));
+  mc.setOption({
+    tooltip: baseTooltip(),
+    grid:{left:10,right:40,top:8,bottom:8,containLabel:true},
+    xAxis:{type:'value',minInterval:1,axisLabel:{fontSize:11,color:'#8AA0AE'},splitLine:{lineStyle:{color:'#EFF2F5'}}},
+    yAxis:{type:'category',data:mk,axisLabel:{fontSize:12,color:'#1C2B36'},axisTick:{show:false},axisLine:{show:false}},
+    series:[{type:'bar',data:mv,barWidth:16,
+      itemStyle:{borderRadius:8,color:'#0E7490'},
+      label:{show:true,position:'right',fontSize:13,fontWeight:700,color:'#1C2B36',formatter:function(p){return p.value + ' 家';}}
+    }]
+  });
+
+  // region distribution
+  var rk = Object.keys(d.reg_dist), rv = rk.map(function(k){return d.reg_dist[k];});
+  var rc = echarts.init(document.getElementById('chartReg'));
+  rc.setOption({
+    tooltip: baseTooltip(),
+    grid:{left:10,right:40,top:8,bottom:8,containLabel:true},
+    xAxis:{type:'value',minInterval:1,axisLabel:{fontSize:11,color:'#8AA0AE'},splitLine:{lineStyle:{color:'#EFF2F5'}}},
+    yAxis:{type:'category',data:rk,axisLabel:{fontSize:12,color:'#1C2B36'},axisTick:{show:false},axisLine:{show:false}},
+    series:[{type:'bar',data:rv,barWidth:14,
+      itemStyle:{borderRadius:7,color:'#0F766E'},
+      label:{show:true,position:'right',fontSize:13,fontWeight:700,color:'#1C2B36',formatter:function(p){return p.value + ' 家';}}
+    }]
+  });
+
+  // category x experience coverage
+  var ck = Object.keys(d.cat_exp);
+  var earP = ck.map(function(k){return +(d.cat_exp[k].ear/d.cat_exp[k].n*100).toFixed(1);});
+  var wearP = ck.map(function(k){return +(d.cat_exp[k].wear/d.cat_exp[k].n*100).toFixed(1);});
+  var ec = echarts.init(document.getElementById('chartExp'));
+  ec.setOption({
+    tooltip: Object.assign(baseTooltip(), {valueFormatter:function(v){return v + '%';}}),
+    legend:{top:0,textStyle:{fontSize:12,color:'#5B6B78'},itemWidth:14,itemHeight:10},
+    grid:{left:10,right:20,top:40,bottom:8,containLabel:true},
+    xAxis:{type:'category',data:ck.map(function(k){return k.replace(/（.*$/,'');}),axisLabel:{fontSize:11,color:'#1C2B36',interval:0},axisTick:{show:false},axisLine:{lineStyle:{color:'#D4DCE2'}}},
+    yAxis:{type:'value',max:100,axisLabel:{fontSize:11,color:'#8AA0AE',formatter:'{value}%'},splitLine:{lineStyle:{color:'#EFF2F5'}}},
+    series:[
+      {name:'耳机运营经验',type:'bar',data:earP,barWidth:'30%',itemStyle:{borderRadius:[4,4,0,0],color:'#0E7490'},label:{show:true,position:'top',fontSize:11,color:'#0E7490',formatter:'{c}%'}},
+      {name:'穿戴运营经验',type:'bar',data:wearP,barWidth:'30%',itemStyle:{borderRadius:[4,4,0,0],color:'#E8A33D'},label:{show:true,position:'top',fontSize:11,color:'#B7791F',formatter:'{c}%'}}
+    ]
+  });
+}
+
+/* ---------- 03 top profiles ---------- */
+(function(){
+  var box = document.getElementById('topGrid'), html = '';
+  REPORT_DATA.top.forEach(function(r, i){
+    var reasons = r.reasons.split(/\d\)\s*/).filter(function(s){return s.trim();});
+    html += '<div class="profile">'
+      + '<div class="rank">' + scoreBadge(r.score) + '<div><h3>' + shortName(r.name) + '</h3><div class="full">' + r.name + '</div></div></div>'
+      + '<div class="tags"><span class="tag teal">' + r.mode + '</span><span class="tag">' + r.hq + '</span>'
+      + (r.ear.indexOf('有') === 0 ? '<span class="tag amber">耳机经验</span>' : '')
+      + (r.wear.indexOf('有') === 0 ? '<span class="tag amber">穿戴经验</span>' : '') + '</div>'
+      + '<ul>' + reasons.map(function(s){return '<li>' + s.replace(/\s*$/,'') + '</li>';}).join('') + '</ul></div>';
+  });
+  box.innerHTML = html;
+})();
+
+/* ---------- 05 table ---------- */
+function modeChip(m){ return '<span class="mode-chip">' + m + '</span>'; }
+function expCell(v){
+  var short = v.length > 14 ? v.slice(0,14) + '…' : v;
+  return '<span title="' + v.replace(/"/g,'&quot;') + '">' + short + '</span>';
+}
+var openRow = -1;
+function renderTable(){
+  var q = (document.getElementById('q').value || '').trim().toLowerCase();
+  var fc = document.getElementById('fCat').value;
+  var fs = document.getElementById('fScore').value;
+  var rows = REPORT_DATA.records.filter(function(r){
+    if (fc && r.cat !== fc) return false;
+    if (fs) {
+      var min = parseFloat(fs);
+      if (r.score < min) return false;
+      if (fs === '5' && r.score < 4.99) return false;
+    }
+    if (q && r.name.toLowerCase().indexOf(q) < 0 && shortName(r.name).toLowerCase().indexOf(q) < 0) return false;
+    return true;
+  });
+  var tbody = document.getElementById('tbody'), html = '';
+  rows.forEach(function(r, idx){
+    html += '<tr class="cat-row" onclick="toggleRow(' + idx + ',' + rows.length + ')">'
+      + '<td><span class="cname">' + r.name + '</span></td>'
+      + '<td>' + r.cat.replace(/（.*$/,'') + '</td>'
+      + '<td>' + r.hq.split('·')[0] + '</td>'
+      + '<td>' + modeChip(r.mode) + '</td>'
+      + '<td><span class="snum">' + scoreBadge(r.score) + '</span></td>'
+      + '<td>' + expCell(r.ear) + '</td>'
+      + '<td>' + expCell(r.wear) + '</td></tr>'
+      + '<tr class="detail-row" id="d' + idx + '" style="display:none"><td colspan="7"><div class="detail-box">'
+      + '<div class="d-item"><b>耳机类运营经验：</b>' + r.ear + '</div>'
+      + '<div class="d-item"><b>穿戴类运营经验：</b>' + r.wear + '</div>'
+      + '<div class="d-reasons"><b>可合作的具体原因：</b>' + r.reasons + '</div>'
+      + '</div></td></tr>';
+  });
+  if (!rows.length) html = '<tr><td colspan="7" class="empty">无匹配候选，请调整筛选条件</td></tr>';
+  tbody.innerHTML = html;
+  document.getElementById('countline').textContent = '共 ' + rows.length + ' 家 / 98 家';
+  window.__rows = rows;
+}
+function toggleRow(idx){
+  var el = document.getElementById('d' + idx);
+  if (!el) return;
+  var willShow = el.style.display === 'none';
+  el.style.display = willShow ? '' : 'none';
+}
+function resetFilters(){
+  document.getElementById('q').value = '';
+  document.getElementById('fCat').value = '';
+  document.getElementById('fScore').value = '';
+  renderTable();
+}
+
+/* ---------- boot ---------- */
+(function(){
+  var cats = Object.keys(REPORT_DATA.cat_dist);
+  var sel = document.getElementById('fCat');
+  cats.forEach(function(c){ var o = document.createElement('option'); o.value = c; o.textContent = c.replace(/（.*$/,''); sel.appendChild(o); });
+  initCharts();
+  renderTable();
+  window.addEventListener('resize', function(){
+    ['chartScore','chartCat','chartMode','chartReg','chartExp'].forEach(function(id){
+      var c = echarts.getInstanceByDom(document.getElementById(id));
+      if (c) c.resize();
+    });
+  });
+})();
+</script>
+</body>
+</html>
