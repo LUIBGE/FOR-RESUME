@@ -1,0 +1,21 @@
+{
+  "_readme": "项目源文件清单。path 是 GitHub 仓库 LUIBGE/AI-PROJECT 里的真实路径（当前源文件平铺在仓库根目录，所以不带目录前缀）。卡片里的缩略图已在 index.html 的 PROJECTS 中写死，不在此处配置。slug 必须与 index.html 中 PROJECTS 的 slug 一致（report / wms / cup）。",
+
+  "projects": {
+    "report": {
+      "files": [
+        { "name": "耳机穿戴电商代理调研报告.html", "path": "耳机穿戴电商代理调研报告.html", "size": "70.9 KB" }
+      ]
+    },
+    "wms": {
+      "files": [
+        { "name": "仓库管理看板.html", "path": "仓库管理看板.html", "size": "134.5 KB" }
+      ]
+    },
+    "cup": {
+      "files": [
+        { "name": "2025校长杯男子甲组决赛.html", "path": "2025校长杯男子甲组决赛.html", "size": "93.5 KB" }
+      ]
+    }
+  }
+}
